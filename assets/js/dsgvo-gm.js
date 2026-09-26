@@ -83,6 +83,7 @@
             $container.find('.dsgvo-gm-error').remove();
             $container.data('dsgvoGmOriginal', $container.contents().detach());
             $container.data('dsgvoGmLoaded', true).addClass('dsgvo-gm-loaded').append($safeIframe);
+            $('.dsgvo-gm-reset-status').empty();
             if ($container.attr('data-show-reset') === '1') {
                 var $revoke = $('<button>', { type: 'button', 'class': 'dsgvo-gm-revoke-btn' })
                     .text(messages.revokeText || 'Unload maps and reset choice');
@@ -112,9 +113,7 @@
         }
     });
 
-    $(document).on('click', '.dsgvo-gm-revoke-btn', function (event) {
-        event.preventDefault();
-        var $current = $(this).closest('.dsgvo-gm-overlay');
+    function resetChoice() {
         writeConsentCookie(false);
         $('.dsgvo-gm-overlay').each(function () {
             var $container = $(this);
@@ -125,7 +124,23 @@
             }
             $container.find('.dsgvo-gm-remember-checkbox').prop('checked', false);
         });
+        $('.dsgvo-gm-reset-status').text(messages.resetText || 'Your choice has been reset. Maps will load only after you consent again.');
+    }
+
+    $(document).on('click', '.dsgvo-gm-revoke-btn', function (event) {
+        event.preventDefault();
+        var $current = $(this).closest('.dsgvo-gm-overlay');
+        resetChoice();
         $current.find('.dsgvo-gm-load-btn').trigger('focus');
+    });
+
+    $(document).on('click', '.dsgvo-gm-reset-btn', function (event) {
+        event.preventDefault();
+        resetChoice();
+    });
+
+    $(document).on('change', '.dsgvo-gm-remember-checkbox', function () {
+        $('.dsgvo-gm-reset-status').empty();
     });
 
     $(function () {

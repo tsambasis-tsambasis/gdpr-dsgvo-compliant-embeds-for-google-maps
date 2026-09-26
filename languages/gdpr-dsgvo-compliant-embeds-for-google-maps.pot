@@ -1,277 +1,275 @@
-# German translation for GDPR-DSGVO compliant Embeds for Google Maps.
 # Copyright (C) 2026 Tsambasis & Tsambasis
-# Distributed under GPLv2 or later.
+# This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
 "Project-Id-Version: GDPR-DSGVO compliant Embeds for Google Maps 1.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/gdpr-dsgvo-compliant-embeds-for-google-maps\n"
-"POT-Creation-Date: 2026-09-26 17:52+0000\n"
-"PO-Revision-Date: 2026-09-26 17:52+0000\n"
-"Last-Translator: Tsambasis & Tsambasis\n"
-"Language-Team: Tsambasis & Tsambasis\n"
-"Language: de_DE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: WordPress WP-CLI / Python gettext\n"
+"POT-Creation-Date: 2026-09-26T17:53:02+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: gdpr-dsgvo-compliant-embeds-for-google-maps\n"
 
 #. Plugin Name of the plugin
 #: gdpr-dsgvo-compliant-embeds-for-google-maps.php
 msgid "GDPR-DSGVO compliant Embeds for Google Maps"
-msgstr "GDPR-DSGVO-konforme Einbettungen von Google Maps"
+msgstr ""
 
 #. Plugin URI of the plugin
 #: gdpr-dsgvo-compliant-embeds-for-google-maps.php
 msgid "https://solutionfirst.m00dy.org/wp-plugin/"
-msgstr "https://solutionfirst.m00dy.org/wp-plugin/"
+msgstr ""
 
 #. Description of the plugin
 #: gdpr-dsgvo-compliant-embeds-for-google-maps.php
 msgid "Embeds Google Maps after consent, with per-map styles, notices and optional remembered choices."
-msgstr "Bindet Google Maps nach Einwilligung ein, mit individuellen Designs, Hinweisen und optional gespeicherter Auswahl."
+msgstr ""
 
 #. Author of the plugin
 #: gdpr-dsgvo-compliant-embeds-for-google-maps.php
 msgid "Tsambasis & Tsambasis"
-msgstr "Tsambasis & Tsambasis"
+msgstr ""
 
 #. Author URI of the plugin
 #: gdpr-dsgvo-compliant-embeds-for-google-maps.php
 msgid "https://tsambasis.net/"
-msgstr "https://tsambasis.net/"
+msgstr ""
 
 #: gdpr-dsgvo-compliant-embeds-for-google-maps.php:26
 msgid "Settings"
-msgstr "Einstellungen"
+msgstr ""
 
 #: gdpr-dsgvo-compliant-embeds-for-google-maps.php:27
 msgid "More information"
-msgstr "Mehr Informationen"
+msgstr ""
 
 #: gdpr-dsgvo-compliant-embeds-for-google-maps.php:135
 #: gdpr-dsgvo-compliant-embeds-for-google-maps.php:182
 msgid "Google Maps"
-msgstr "Google Maps"
+msgstr ""
 
 #: gdpr-dsgvo-compliant-embeds-for-google-maps.php:179
 #: includes/admin.php:73
 msgid "Load Google Maps"
-msgstr "Google Maps laden"
+msgstr ""
 
 #: gdpr-dsgvo-compliant-embeds-for-google-maps.php:180
 msgid "Unload maps and reset choice"
-msgstr "Karten entladen und Auswahl zurücksetzen"
+msgstr ""
 
 #: gdpr-dsgvo-compliant-embeds-for-google-maps.php:181
 msgid "This map could not be loaded. Please contact the website owner."
-msgstr "Diese Karte konnte nicht geladen werden. Bitte wenden Sie sich an den Website-Betreiber."
+msgstr ""
 
 #: includes/admin.php:34
 msgid "Maps"
-msgstr "Karten"
+msgstr ""
 
 #: includes/admin.php:35
 msgid "Map"
-msgstr "Karte"
+msgstr ""
 
 #: includes/admin.php:36
 msgid "Add New Map"
-msgstr "Neue Karte hinzufügen"
+msgstr ""
 
 #: includes/admin.php:37
 msgid "Edit Map"
-msgstr "Karte bearbeiten"
+msgstr ""
 
 #: includes/admin.php:38
 msgid "All Maps"
-msgstr "Alle Karten"
+msgstr ""
 
 #: includes/admin.php:57
 msgid "Map Settings"
-msgstr "Karteneinstellungen"
+msgstr ""
 
 #: includes/admin.php:98
 #: includes/frontend.php:48
 msgid "Remember selection"
-msgstr "Auswahl merken"
+msgstr ""
 
 #: includes/admin.php:112
 msgid "Shortcode:"
-msgstr "Shortcode:"
+msgstr ""
 
 #: includes/admin.php:121
 msgid "iframe Code:"
-msgstr "iframe-Code:"
+msgstr ""
 
 #: includes/admin.php:123
 msgid "Paste a Google Maps embed iframe with an HTTPS source URL. Other iframe sources are not supported."
-msgstr "Fügen Sie den Einbettungs-iframe von Google Maps mit einer HTTPS-Quelladresse ein. Andere iframe-Quellen werden nicht unterstützt."
+msgstr ""
 
 #: includes/admin.php:127
 msgid "Button Settings"
-msgstr "Button-Einstellungen"
+msgstr ""
 
 #: includes/admin.php:130
 msgid "Button Text:"
-msgstr "Buttontext:"
+msgstr ""
 
 #: includes/admin.php:139
 msgid "Button Font Size:"
-msgstr "Button-Schriftgröße:"
+msgstr ""
 
 #: includes/admin.php:150
 msgid "Button Type:"
-msgstr "Button-Typ:"
+msgstr ""
 
 #: includes/admin.php:157
 msgid "Rounded"
-msgstr "Abgerundet"
+msgstr ""
 
 #: includes/admin.php:165
 msgid "Squared"
-msgstr "Eckig"
+msgstr ""
 
 #: includes/admin.php:169
 msgid "Style Settings"
-msgstr "Stileinstellungen"
+msgstr ""
 
 #: includes/admin.php:172
 msgid "Design:"
-msgstr "Design:"
+msgstr ""
 
 #: includes/admin.php:174
 msgid "Light"
-msgstr "Hell"
+msgstr ""
 
 #: includes/admin.php:175
 msgid "Dark"
-msgstr "Dunkel"
+msgstr ""
 
 #: includes/admin.php:176
 msgid "Custom"
-msgstr "Angepasst"
+msgstr ""
 
 #: includes/admin.php:182
 msgid "Overlay Background Color:"
-msgstr "Hintergrundfarbe der Überlagerung:"
+msgstr ""
 
 #: includes/admin.php:192
 msgid "Button Background Color:"
-msgstr "Hintergrundfarbe Button:"
+msgstr ""
 
 #: includes/admin.php:202
 msgid "Button Text Color:"
-msgstr "Textfarbe Button:"
+msgstr ""
 
 #: includes/admin.php:212
 msgid "Privacy Info Text Color:"
-msgstr "Textfarbe Datenschutzinformationen:"
+msgstr ""
 
 #: includes/admin.php:222
 msgid "Size Settings (% or px)"
-msgstr "Größeneinstellungen (% oder px)"
+msgstr ""
 
 #: includes/admin.php:225
 msgid "Width:"
-msgstr "Breite:"
+msgstr ""
 
 #: includes/admin.php:232
 msgid "100% or 600px"
-msgstr "100% oder 600px"
+msgstr ""
 
 #: includes/admin.php:235
 msgid "Height:"
-msgstr "Höhe:"
+msgstr ""
 
 #: includes/admin.php:242
 msgid "100% or 450px"
-msgstr "100% oder 450px"
+msgstr ""
 
 #: includes/admin.php:245
 msgid "Privacy Settings"
-msgstr "Datenschutzeinstellungen"
+msgstr ""
 
 #: includes/admin.php:254
 msgid "Enable privacy notice"
-msgstr "Datenschutzhinweis aktivieren"
+msgstr ""
 
 #: includes/admin.php:259
 msgid "Privacy Policy Text:"
-msgstr "Text für den Datenschutzhinweis:"
+msgstr ""
 
 #: includes/admin.php:269
 msgid "Privacy Text Font Size:"
-msgstr "Schriftgröße des Datenschutztexts:"
+msgstr ""
 
 #: includes/admin.php:280
 msgid "Privacy Policy URL Text:"
-msgstr "Linktext zur Datenschutzerklärung:"
+msgstr ""
 
 #: includes/admin.php:290
 msgid "Privacy Link Font Size:"
-msgstr "Schriftgröße des Datenschutzlinks:"
+msgstr ""
 
 #: includes/admin.php:301
 msgid "Privacy Policy URL:"
-msgstr "URL der Datenschutzerklärung:"
+msgstr ""
 
 #: includes/admin.php:311
 msgid "Overlay Message:"
-msgstr "Nachricht im Overlay:"
+msgstr ""
 
 #: includes/admin.php:316
 msgid "Optional text shown between the button and the privacy notice."
-msgstr "Optionaler Text, der zwischen Button und Datenschutzhinweis angezeigt wird."
+msgstr ""
 
 #: includes/admin.php:320
 msgid "Message Font Size:"
-msgstr "Schriftgröße der Nachricht:"
+msgstr ""
 
 #: includes/admin.php:330
 msgid "Load Behavior"
-msgstr "Ladeverhalten"
+msgstr ""
 
 #: includes/admin.php:339
 msgid "Load all maps on one page"
-msgstr "Alle teilnehmenden Karten auf einer Seite laden"
+msgstr ""
 
 #: includes/admin.php:341
 msgid "If this option is enabled for multiple maps on the same page, one click loads all enabled maps together."
-msgstr "Wenn diese Option bei mehreren Karten auf derselben Seite aktiviert ist, lädt ein Klick alle aktivierten Karten gemeinsam."
+msgstr ""
 
 #: includes/admin.php:351
 msgid "Show remember selection"
-msgstr "Checkbox „Auswahl merken“ anzeigen"
+msgstr ""
 
 #: includes/admin.php:353
 msgid "Shows a checkbox in the overlay. If checked when loading, a site-wide cookie remembers consent for 180 days for maps with this option enabled. Visitors can unload maps and reset the choice."
-msgstr "Zeigt im Overlay eine Checkbox an. Wird sie beim Laden aktiviert, merkt sich ein websiteweiter Cookie die Zustimmung für 180 Tage für Karten mit aktivierter Merkoption. Besucher können Karten entladen und die Auswahl zurücksetzen."
+msgstr ""
 
 #: includes/admin.php:357
 msgid "Remember Selection Text:"
-msgstr "Text für „Auswahl merken“:"
+msgstr ""
 
 #: includes/admin.php:367
 msgid "Remember Selection Font Size:"
-msgstr "Schriftgröße von „Auswahl merken“:"
+msgstr ""
 
 #: includes/admin.php:378
 msgid "Remember Selection Text Color:"
-msgstr "Textfarbe von „Auswahl merken“:"
+msgstr ""
 
 #: includes/admin.php:467
 msgid "The iframe was not saved because it is not a supported HTTPS Google Maps embed. The previous embed has been kept."
-msgstr "Der iframe wurde nicht gespeichert, weil er keine unterstützte HTTPS-Einbettung von Google Maps ist. Die bisherige Einbettung bleibt erhalten."
+msgstr ""
 
 #: includes/frontend.php:30
 msgid "Load Map"
-msgstr "Karte laden"
+msgstr ""
 
 #: includes/frontend.php:45
 msgid "Please see our"
-msgstr "Es gilt unsere"
+msgstr ""
 
 #: includes/frontend.php:46
 msgid "Privacy Policy"
-msgstr "Datenschutzerklärung"
+msgstr ""

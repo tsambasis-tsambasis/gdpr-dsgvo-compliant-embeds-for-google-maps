@@ -80,13 +80,14 @@
                 referrerpolicy: 'strict-origin-when-cross-origin',
                 sandbox: 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation'
             });
-            var $revoke = $('<button>', { type: 'button', 'class': 'dsgvo-gm-revoke-btn' })
-                .text(messages.revokeText || 'Unload maps and reset choice');
-            var $controls = $('<div>', { 'class': 'dsgvo-gm-controls' }).append($revoke);
             $container.find('.dsgvo-gm-error').remove();
-            $container.closest('.dsgvo-gm-container').addClass('dsgvo-gm-map-loaded');
             $container.data('dsgvoGmOriginal', $container.contents().detach());
-            $container.data('dsgvoGmLoaded', true).addClass('dsgvo-gm-loaded').append($safeIframe, $controls);
+            $container.data('dsgvoGmLoaded', true).addClass('dsgvo-gm-loaded').append($safeIframe);
+            if ($container.attr('data-show-reset') === '1') {
+                var $revoke = $('<button>', { type: 'button', 'class': 'dsgvo-gm-revoke-btn' })
+                    .text(messages.revokeText || 'Unload maps and reset choice');
+                $container.append($('<div>', { 'class': 'dsgvo-gm-controls' }).append($revoke));
+            }
             return true;
         } catch (_) {
             showError($container);
@@ -120,7 +121,6 @@
             if ($container.data('dsgvoGmLoaded')) {
                 var original = $container.data('dsgvoGmOriginal');
                 $container.empty().append(original).removeClass('dsgvo-gm-loaded');
-                $container.closest('.dsgvo-gm-container').removeClass('dsgvo-gm-map-loaded');
                 $container.removeData('dsgvoGmLoaded').removeData('dsgvoGmOriginal');
             }
             $container.find('.dsgvo-gm-remember-checkbox').prop('checked', false);

@@ -79,24 +79,24 @@ function dsgvo_gm_map_settings_callback($post)
     $overlay_bg = dsgvo_gm_meta($post->ID, '_dsgvo_gm_overlay_bg') ?: '#ffffff';
     $button_bg  = dsgvo_gm_meta($post->ID, '_dsgvo_gm_button_bg') ?: '#0073aa';
     $btn_color  = dsgvo_gm_meta($post->ID, '_dsgvo_gm_button_color') ?: '#ffffff';
-    $btn_font_size = dsgvo_gm_sanitize_font_size(dsgvo_gm_meta($post->ID, '_dsgvo_gm_button_font_size'), '16px');
+    $btn_font_size = dsgvo_gm_meta($post->ID, '_dsgvo_gm_button_font_size', '16px');
     $privacy_color = dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_color') ?: '#666666';
     $privacy_enabled = dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_enabled') ?: 0;
     $privacy_link = dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_link') ?: '';
 
     $privacy_text = dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_text') ?: '';
     $privacy_link_text = dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_link_text') ?: '';
-    $privacy_font_size = dsgvo_gm_sanitize_font_size(dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_font_size'), '0.8em');
-    $privacy_link_font_size = dsgvo_gm_sanitize_font_size(dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_link_font_size'), '0.8em');
+    $privacy_font_size = dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_font_size', '0.8em');
+    $privacy_link_font_size = dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_link_font_size', '0.8em');
     $message_text = dsgvo_gm_meta($post->ID, '_dsgvo_gm_message_text') ?: '';
-    $message_font_size = dsgvo_gm_sanitize_font_size(dsgvo_gm_meta($post->ID, '_dsgvo_gm_message_font_size'), '0.9em');
+    $message_font_size = dsgvo_gm_meta($post->ID, '_dsgvo_gm_message_font_size', '0.9em');
 
-    $width = dsgvo_gm_sanitize_dimension(dsgvo_gm_meta($post->ID, '_dsgvo_gm_width'));
-    $height = dsgvo_gm_sanitize_dimension(dsgvo_gm_meta($post->ID, '_dsgvo_gm_height'));
+    $width = dsgvo_gm_meta($post->ID, '_dsgvo_gm_width', '100%');
+    $height = dsgvo_gm_meta($post->ID, '_dsgvo_gm_height', '100%');
     $load_all_enabled = dsgvo_gm_meta($post->ID, '_dsgvo_gm_load_all_enabled') ?: 0;
     $remember_enabled = dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_enabled') ?: 0;
     $remember_text = dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_text') ?: __('Remember selection', 'gdpr-dsgvo-compliant-embeds-for-google-maps');
-    $remember_font_size = dsgvo_gm_sanitize_font_size(dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_font_size'), '0.85em');
+    $remember_font_size = dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_font_size', '0.85em');
     $remember_color = dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_color') ?: '#666666';
 
 
@@ -350,7 +350,7 @@ function dsgvo_gm_map_settings_callback($post)
                 <?php checked($remember_enabled, 1); ?>>
             <?php esc_html_e('Show remember selection', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?>
         </label><br>
-        <span class="description"><?php esc_html_e('Shows a checkbox in the overlay. If checked when loading, a site-wide cookie remembers consent for 180 days for maps with this option enabled. Visitors can unload maps and reset the choice.', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></span>
+        <span class="description"><?php esc_html_e('Shows a checkbox in the overlay. If checked when loading, a site-wide cookie remembers consent for 180 days for maps with this option enabled. The optional reset control requires show_reset="true" in the shortcode.', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></span>
     </p>
 
     <p>
@@ -387,6 +387,26 @@ function dsgvo_gm_map_settings_callback($post)
     <?php
 }
 
+/** Keep unchanged legacy values byte-for-byte; reject invalid edits without silent resets. */
+function dsgvo_gm_save_size($post_id, $field, $value, $font = false)
+{
+    $key = '_dsgvo_gm_' . $field;
+    $previous = dsgvo_gm_meta($post_id, $key);
+    if (null === $value || $value === $previous || $value === str_replace(array("\r", "\n"), '', $previous)) {
+        return;
+    }
+    if ('' === trim($value)) {
+        update_post_meta($post_id, $key, '');
+        return;
+    }
+    $clean = $font ? dsgvo_gm_sanitize_font_size($value, null) : dsgvo_gm_sanitize_dimension($value, null);
+    if (null === $clean) {
+        set_transient('dsgvo_gm_size_error_' . get_current_user_id(), 1, MINUTE_IN_SECONDS);
+        return;
+    }
+    update_post_meta($post_id, $key, wp_slash($clean));
+}
+
 // Save only this post type and only authorized, intentional editor submissions.
 add_action('save_post_dsgvo_map', 'dsgvo_gm_save_meta');
 function dsgvo_gm_save_meta($post_id)
@@ -404,7 +424,10 @@ function dsgvo_gm_save_meta($post_id)
         return isset($_POST[$key]) && is_string($_POST[$key]) ? wp_unslash($_POST[$key]) : null;
     };
     $iframe_input = $input('dsgvo_gm_iframe');
-    if (null !== $iframe_input) {
+    $iframe_previous = dsgvo_gm_meta($post_id, '_dsgvo_gm_iframe');
+    // Browsers submit textarea newlines as CRLF; this does not constitute an author edit.
+    $iframe_changed = null !== $iframe_input && str_replace(array("\r\n", "\r"), "\n", $iframe_input) !== str_replace(array("\r\n", "\r"), "\n", $iframe_previous);
+    if ($iframe_changed) {
         $iframe = dsgvo_gm_sanitize_iframe($iframe_input);
         if ('' === trim($iframe_input) || '' !== $iframe) {
             update_post_meta($post_id, '_dsgvo_gm_iframe', wp_slash($iframe));
@@ -423,10 +446,10 @@ function dsgvo_gm_save_meta($post_id)
     if (null !== $message) {
         update_post_meta($post_id, '_dsgvo_gm_message_text', sanitize_textarea_field(substr($message, 0, 8000)));
     }
-    foreach (array('button_font_size' => '16px', 'privacy_font_size' => '0.8em', 'privacy_link_font_size' => '0.8em', 'message_font_size' => '0.9em', 'remember_font_size' => '0.85em') as $field => $default) {
+    foreach (array('button_font_size', 'privacy_font_size', 'privacy_link_font_size', 'message_font_size', 'remember_font_size') as $field) {
         $value = $input('dsgvo_gm_' . $field);
         if (null !== $value) {
-            update_post_meta($post_id, '_dsgvo_gm_' . $field, dsgvo_gm_sanitize_font_size($value, $default));
+            dsgvo_gm_save_size($post_id, $field, $value, true);
         }
     }
     foreach (array('button_shape' => array('rounded', 'square'), 'template' => array('light', 'dark', 'custom')) as $field => $allowed) {
@@ -449,7 +472,7 @@ function dsgvo_gm_save_meta($post_id)
     foreach (array('width', 'height') as $field) {
         $value = $input('dsgvo_gm_' . $field);
         if (null !== $value) {
-            update_post_meta($post_id, '_dsgvo_gm_' . $field, dsgvo_gm_sanitize_dimension($value));
+            dsgvo_gm_save_size($post_id, $field, $value);
         }
     }
     foreach (array('privacy_enabled', 'load_all_enabled', 'remember_enabled') as $field) {
@@ -463,6 +486,11 @@ function dsgvo_gm_save_meta($post_id)
 
 add_action('admin_notices', function () {
     $screen = get_current_screen();
+    $size_key = 'dsgvo_gm_size_error_' . get_current_user_id();
+    if ($screen && 'dsgvo_map' === $screen->post_type && get_transient($size_key)) {
+        delete_transient($size_key);
+        echo '<div class="notice notice-error"><p>' . esc_html__('One or more size values were not saved because they contain unsupported CSS. The previous values have been kept.', 'gdpr-dsgvo-compliant-embeds-for-google-maps') . '</p></div>';
+    }
     $key = 'dsgvo_gm_iframe_error_' . get_current_user_id();
     if ($screen && 'dsgvo_map' === $screen->post_type && get_transient($key)) {
         delete_transient($key);

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/donate/?hosted_button_id=CUPZTPGSAHNKY
 Tags: google maps, gdpr, dsgvo, privacy, shortcode
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -25,7 +25,7 @@ Published by [Tsambasis & Tsambasis](https://tsambasis.net/).
 * Separate font sizes for the button, overlay message, privacy text, privacy link and remember-selection label.
 * An optional message between the load button and privacy notice.
 * Configurable privacy notice, link text and privacy-policy URL.
-* Map width and height controls; percentage height acts as an aspect ratio relative to the container width. Loaded maps use at least 200 x 200 pixels plus space for the reset control; resetting restores the configured size.
+* Existing map dimensions and theme content-width limits are respected. With the default shortcode, loading does not enlarge the map or reserve control space.
 * Optional grouped loading: one click loads the maps on that page that also have the group option enabled.
 * An optional, initially unchecked remember-selection checkbox below the privacy notice.
 * English source text and a German translation, following the WordPress language.
@@ -43,7 +43,7 @@ Without a remembered choice, the Google Maps iframe is created only after the vi
 
 The checkbox is optional and initially unchecked. Decide whether to offer remembered consent and describe its effect in your privacy notice. The cookie is a loading preference, not a server-side consent audit log.
 
-Each loaded map provides **Unload maps and reset choice**. This deletes the plugin's consent cookie, unloads all currently loaded plugin maps on that page and restores their overlays with unchecked boxes. It cannot undo information already transmitted to Google.
+To offer **Unload maps and reset choice**, opt in with `[dsgvo_map id="123" show_reset="true"]`. Ordinary shortcodes keep their previous layout without an added reset control. The opt-in control uses 64px of the configured map height. The optional control clears the consent cookie and unloads plugin maps on the current page; it cannot undo data already sent to Google. Visitors can also remove this website's consent cookie in their browser settings.
 
 = External service: Google Maps =
 
@@ -101,9 +101,15 @@ No. The plugin supports unlimited maps without a license key. Hosting and third-
 5. Grouped loading and remember-selection text, size and color.
 6. Mobile consent overlay before Google Maps is loaded.
 7. Light, dark and custom desktop overlays with message and remember-selection controls.
-8. A loaded Google map with the control to unload maps and reset the choice.
+8. A loaded Google map with the explicitly enabled unload/reset control.
 
 == Changelog ==
+= 1.1.2 =
+* Fixed the 1.1.1 layout regression: restored the 1.1.0 styling baseline and theme content-width behavior.
+* Preserved compatible existing dimensions, typography and unchanged editor values.
+* Made the reset control an explicit show_reset="true" shortcode option; ordinary maps keep their full configured size without automatic enlargement or reserved control height.
+* Retained security validation and consent handling without applying previously ignored shortcode classes.
+
 = 1.1.1 =
 * Updated publisher details and documentation for Tsambasis & Tsambasis.
 * Improved validation, permission checks and consent handling.
@@ -126,17 +132,16 @@ No. The plugin supports unlimited maps without a license key. Hosting and third-
 * Updated README: Added / Expanded Plugin information.
 
 = 1.0.3 =
-* Code Refactoring (Removed duplicate of plugin constant, removed unnecessary calls during uninstall).
+* Removed duplicate constants and unnecessary uninstall calls.
 
 = 1.0.2 =
-* Removed the map limit and license option. Now every user can add unlimited maps without any license key.
+* Removed map limits and license keys.
 * Code Refactoring (code structure, code comments).
-* Adjusted the screenshots (removed some, added new) due to no longer having a license option.
+* Updated screenshots for unlimited maps.
 
 = 1.0.1 =
-* Bug Fix Privacy Info Spacing: Spacing between Privacy Info Text and Privacy Info Link.
-* Bug Fix Privacy Info Color: If user selects custom Privacy Info Text Color it now also applies to the link not only to the text.
-* Bug Fix JavaScript Integration of sandbox flags for iframe embedding: Allowed Pop-ups and Top-Level-Navigation to prevent COOP-Errors while opening "large map" by clicking a link inside the rendered iframe.
+* Fixed privacy-text/link spacing and shared custom text color.
+* Updated iframe sandbox flags for opening the larger map.
 
 = 1.0.0 =
 * Initial release with consent-based iframe embeds.

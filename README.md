@@ -2,9 +2,9 @@
 
 Consent-based Google Maps embeds for WordPress, published by [Tsambasis & Tsambasis](https://tsambasis.net/).
 
-Version **1.1.1** · WordPress **6.2+** · PHP **7.4+**
+Version **1.1.2** · WordPress **6.2+** · PHP **7.4+**
 
-Tested with WordPress 7.1.2 and PHP 8.5.7. These checks do not cover every supported WordPress/PHP combination.
+This hotfix was tested with WordPress 7.1.2 and PHP 8.5.7, including a direct comparison with the 1.1.0 layout. See [TESTING.md](TESTING.md) for the checks, evidence and limits.
 
 Create unlimited maps, place them with a shortcode and show a local overlay before the Google iframe is loaded. The plugin is free, without a license key, paid tier, advertising or developer tracking.
 
@@ -27,11 +27,11 @@ Replace `123` with your map's ID. JavaScript is required to load the iframe afte
 - Custom load-button text and rounded or square buttons.
 - Separate font sizes for the button, message, privacy text, privacy link and remember-selection label.
 - Optional overlay message, privacy notice and privacy-policy link.
-- Width and height controls; percentage height provides an aspect ratio relative to the container width. Loaded maps use at least 200 × 200 pixels plus room for the reset control; resetting restores the configured size.
+- Width and height controls that preserve existing layout and theme content-width limits. Maps are not automatically enlarged and no control height is deducted from ordinary embeds.
 - Optional grouped loading for participating maps on the same page.
 - An optional, initially unchecked remember-selection checkbox below the privacy notice.
 
-The font-size controls, message, grouped loading and remember-selection feature were introduced in 1.1.0. This release updates validation, consent handling, translations and documentation. The interface follows WordPress's language; English source text and German translations are included. Custom text remains what you enter.
+The font-size controls, message, grouped loading and remember-selection feature were introduced in 1.1.0. Version 1.1.2 fixes the layout regression introduced in 1.1.1, restoring the 1.1.0 styling baseline while retaining security and consent checks. The interface follows WordPress's language; English source text and German translations are included. Custom text remains what you enter.
 
 ## Consent and privacy
 
@@ -39,7 +39,7 @@ Without a remembered choice, the configured Google Maps iframe is created after 
 
 Grouped loading is configured per map: one participating map's load button also loads the other participating maps on the same page. Describe the group and remembered choice clearly in your consent text.
 
-Use **Unload maps and reset choice** below a loaded map to delete the plugin's cookie and return all loaded plugin maps on the current page to their overlays. Remember checkboxes are cleared. This does not undo data already transmitted to Google.
+Enable the optional **Unload maps and reset choice** control explicitly with `[dsgvo_map id="123" show_reset="true"]`. The ordinary shortcode adds no reset control and preserves its previous map dimensions. When enabled, the control uses 64px of the configured map height. The optional control deletes the plugin cookie and returns loaded plugin maps on the current page to their overlays. It does not undo data already sent to Google. Visitors can also clear this website's consent cookie through browser settings.
 
 Once loaded, the iframe contacts Google directly. Supported HTTPS embed hosts are `google.com`, `www.google.com`, `maps.google.com`, `google.de`, `www.google.de` and `maps.google.de`. Google receives connection data and, through the iframe's `strict-origin-when-cross-origin` policy, the website origin without the page path or query. Google's [Privacy Policy](https://policies.google.com/privacy) and [Maps Terms](https://www.google.com/help/terms_maps/) apply. This plugin does not block requests from other plugins, themes or independently embedded content.
 

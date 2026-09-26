@@ -3,10 +3,10 @@
 # Distributed under GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: GDPR-DSGVO compliant Embeds for Google Maps 1.1.1\n"
+"Project-Id-Version: GDPR-DSGVO compliant Embeds for Google Maps 1.1.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/gdpr-dsgvo-compliant-embeds-for-google-maps\n"
-"POT-Creation-Date: 2026-09-26 17:52+0000\n"
-"PO-Revision-Date: 2026-09-26 17:52+0000\n"
+"POT-Creation-Date: 2026-09-26 19:23+0000\n"
+"PO-Revision-Date: 2026-09-26 19:23+0000\n"
 "Last-Translator: Tsambasis & Tsambasis\n"
 "Language-Team: Tsambasis & Tsambasis\n"
 "Language: de_DE\n"
@@ -49,21 +49,21 @@ msgstr "Einstellungen"
 msgid "More information"
 msgstr "Mehr Informationen"
 
-#: gdpr-dsgvo-compliant-embeds-for-google-maps.php:135
-#: gdpr-dsgvo-compliant-embeds-for-google-maps.php:182
+#: gdpr-dsgvo-compliant-embeds-for-google-maps.php:241
+#: gdpr-dsgvo-compliant-embeds-for-google-maps.php:288
 msgid "Google Maps"
 msgstr "Google Maps"
 
-#: gdpr-dsgvo-compliant-embeds-for-google-maps.php:179
+#: gdpr-dsgvo-compliant-embeds-for-google-maps.php:285
 #: includes/admin.php:73
 msgid "Load Google Maps"
 msgstr "Google Maps laden"
 
-#: gdpr-dsgvo-compliant-embeds-for-google-maps.php:180
+#: gdpr-dsgvo-compliant-embeds-for-google-maps.php:286
 msgid "Unload maps and reset choice"
 msgstr "Karten entladen und Auswahl zurücksetzen"
 
-#: gdpr-dsgvo-compliant-embeds-for-google-maps.php:181
+#: gdpr-dsgvo-compliant-embeds-for-google-maps.php:287
 msgid "This map could not be loaded. Please contact the website owner."
 msgstr "Diese Karte konnte nicht geladen werden. Bitte wenden Sie sich an den Website-Betreiber."
 
@@ -92,7 +92,7 @@ msgid "Map Settings"
 msgstr "Karteneinstellungen"
 
 #: includes/admin.php:98
-#: includes/frontend.php:48
+#: includes/frontend.php:50
 msgid "Remember selection"
 msgstr "Auswahl merken"
 
@@ -245,8 +245,8 @@ msgid "Show remember selection"
 msgstr "Checkbox „Auswahl merken“ anzeigen"
 
 #: includes/admin.php:353
-msgid "Shows a checkbox in the overlay. If checked when loading, a site-wide cookie remembers consent for 180 days for maps with this option enabled. Visitors can unload maps and reset the choice."
-msgstr "Zeigt im Overlay eine Checkbox an. Wird sie beim Laden aktiviert, merkt sich ein websiteweiter Cookie die Zustimmung für 180 Tage für Karten mit aktivierter Merkoption. Besucher können Karten entladen und die Auswahl zurücksetzen."
+msgid "Shows a checkbox in the overlay. If checked when loading, a site-wide cookie remembers consent for 180 days for maps with this option enabled. The optional reset control requires show_reset=\"true\" in the shortcode."
+msgstr "Zeigt ein Kontrollkästchen in der Überlagerung. Wenn es beim Laden aktiviert ist, merkt sich ein websiteweites Cookie die Einwilligung für 180 Tage für Karten, bei denen diese Option aktiviert ist. Die optionale Schaltfläche zum Zurücksetzen erfordert show_reset=\"true\" im Shortcode."
 
 #: includes/admin.php:357
 msgid "Remember Selection Text:"
@@ -260,7 +260,11 @@ msgstr "Schriftgröße von „Auswahl merken“:"
 msgid "Remember Selection Text Color:"
 msgstr "Textfarbe von „Auswahl merken“:"
 
-#: includes/admin.php:467
+#: includes/admin.php:492
+msgid "One or more size values were not saved because they contain unsupported CSS. The previous values have been kept."
+msgstr "Eine oder mehrere Größenangaben wurden nicht gespeichert, weil sie nicht unterstütztes CSS enthalten. Die bisherigen Werte bleiben erhalten."
+
+#: includes/admin.php:497
 msgid "The iframe was not saved because it is not a supported HTTPS Google Maps embed. The previous embed has been kept."
 msgstr "Der iframe wurde nicht gespeichert, weil er keine unterstützte HTTPS-Einbettung von Google Maps ist. Die bisherige Einbettung bleibt erhalten."
 
@@ -268,10 +272,10 @@ msgstr "Der iframe wurde nicht gespeichert, weil er keine unterstützte HTTPS-Ei
 msgid "Load Map"
 msgstr "Karte laden"
 
-#: includes/frontend.php:45
+#: includes/frontend.php:47
 msgid "Please see our"
 msgstr "Es gilt unsere"
 
-#: includes/frontend.php:46
+#: includes/frontend.php:48
 msgid "Privacy Policy"
 msgstr "Datenschutzerklärung"

@@ -25,7 +25,7 @@ Published by [Tsambasis & Tsambasis](https://tsambasis.net/).
 * Separate font sizes for the button, overlay message, privacy text, privacy link and remember-selection label.
 * An optional message between the load button and privacy notice.
 * Configurable privacy notice, link text and privacy-policy URL.
-* Existing map dimensions and theme content-width limits are respected. Loading does not enlarge the map or reserve space for a reset control.
+* Existing map dimensions and theme content-width limits are respected. With the default shortcode, loading does not enlarge the map or reserve control space.
 * Optional grouped loading: one click loads the maps on that page that also have the group option enabled.
 * An optional, initially unchecked remember-selection checkbox below the privacy notice.
 * English source text and a German translation, following the WordPress language.
@@ -43,7 +43,7 @@ Without a remembered choice, the Google Maps iframe is created only after the vi
 
 The checkbox is optional and initially unchecked. Decide whether to offer remembered consent and describe its effect in your privacy notice. The cookie is a loading preference, not a server-side consent audit log.
 
-To offer **Unload maps and reset choice**, opt in with `[dsgvo_map id="123" show_reset="true"]`. Ordinary shortcodes keep their previous layout without an added reset control. The optional control clears the consent cookie and unloads plugin maps on the current page; it cannot undo data already sent to Google. Visitors can also remove this website's consent cookie in their browser settings.
+To offer **Unload maps and reset choice**, opt in with `[dsgvo_map id="123" show_reset="true"]`. Ordinary shortcodes keep their previous layout without an added reset control. The opt-in control uses 64px of the configured map height. The optional control clears the consent cookie and unloads plugin maps on the current page; it cannot undo data already sent to Google. Visitors can also remove this website's consent cookie in their browser settings.
 
 = External service: Google Maps =
 

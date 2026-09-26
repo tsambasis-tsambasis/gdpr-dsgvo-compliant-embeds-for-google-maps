@@ -1,6 +1,6 @@
 # Release 1.1.2
 
-This branch prepares hotfix 1.1.2 for the live-theme layout regression in 1.1.1. A GitHub pull request does not publish a WordPress.org release. Complete the new layout/compatibility checks in TESTING.md before packaging or publishing.
+This branch prepares hotfix 1.1.2 for the live-theme layout regression in 1.1.1. A GitHub pull request does not publish a WordPress.org release. The completed layout/compatibility checks are documented in TESTING.md. Review the final package on staging before publishing.
 
 ## WordPress.org
 

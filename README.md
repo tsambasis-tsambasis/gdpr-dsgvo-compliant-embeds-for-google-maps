@@ -4,7 +4,7 @@ Consent-based Google Maps embeds for WordPress, published by [Tsambasis & Tsamba
 
 Version **1.1.2** · WordPress **6.2+** · PHP **7.4+**
 
-The previous release was tested with WordPress 7.1.2 and PHP 8.5.7, but those checks missed a live-theme layout regression. See [TESTING.md](TESTING.md) for the separate validation status of this hotfix.
+This hotfix was tested with WordPress 7.1.2 and PHP 8.5.7, including a direct comparison with the 1.1.0 layout. See [TESTING.md](TESTING.md) for the checks, evidence and limits.
 
 Create unlimited maps, place them with a shortcode and show a local overlay before the Google iframe is loaded. The plugin is free, without a license key, paid tier, advertising or developer tracking.
 
@@ -39,7 +39,7 @@ Without a remembered choice, the configured Google Maps iframe is created after 
 
 Grouped loading is configured per map: one participating map's load button also loads the other participating maps on the same page. Describe the group and remembered choice clearly in your consent text.
 
-Enable the optional **Unload maps and reset choice** control explicitly with `[dsgvo_map id="123" show_reset="true"]`. The ordinary shortcode adds no reset control and preserves its previous map dimensions. The optional control deletes the plugin cookie and returns loaded plugin maps on the current page to their overlays. It does not undo data already sent to Google. Visitors can also clear this website's consent cookie through browser settings.
+Enable the optional **Unload maps and reset choice** control explicitly with `[dsgvo_map id="123" show_reset="true"]`. The ordinary shortcode adds no reset control and preserves its previous map dimensions. When enabled, the control uses 64px of the configured map height. The optional control deletes the plugin cookie and returns loaded plugin maps on the current page to their overlays. It does not undo data already sent to Google. Visitors can also clear this website's consent cookie through browser settings.
 
 Once loaded, the iframe contacts Google directly. Supported HTTPS embed hosts are `google.com`, `www.google.com`, `maps.google.com`, `google.de`, `www.google.de` and `maps.google.de`. Google receives connection data and, through the iframe's `strict-origin-when-cross-origin` policy, the website origin without the page path or query. Google's [Privacy Policy](https://policies.google.com/privacy) and [Maps Terms](https://www.google.com/help/terms_maps/) apply. This plugin does not block requests from other plugins, themes or independently embedded content.
 

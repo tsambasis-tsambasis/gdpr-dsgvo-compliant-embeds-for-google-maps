@@ -2,9 +2,9 @@
 
 Consent-based Google Maps embeds for WordPress, published by [Tsambasis & Tsambasis](https://tsambasis.net/).
 
-Version **1.1.2** · WordPress **6.2+** · PHP **7.4+**
+Version **1.1.3** · WordPress **6.2+** · PHP **7.4+**
 
-This hotfix was tested with WordPress 7.1.2 and PHP 8.5.7, including a direct comparison with the 1.1.0 layout. See [TESTING.md](TESTING.md) for the checks, evidence and limits.
+Version 1.1.3 was checked with WordPress 7.1.2 and PHP 8.5.7, including the new reset/checkbox controls and the existing-layout comparison. See [TESTING.md](TESTING.md) for the current results and limits.
 
 Create unlimited maps, place them with a shortcode and show a local overlay before the Google iframe is loaded. The plugin is free, without a license key, paid tier, advertising or developer tracking.
 
@@ -29,9 +29,16 @@ Replace `123` with your map's ID. JavaScript is required to load the iframe afte
 - Optional overlay message, privacy notice and privacy-policy link.
 - Width and height controls that preserve existing layout and theme content-width limits. Maps are not automatically enlarged and no control height is deducted from ordinary embeds.
 - Optional grouped loading for participating maps on the same page.
-- An optional, initially unchecked remember-selection checkbox below the privacy notice.
+- An optional, initially unchecked remember-selection checkbox below the privacy notice. Existing design is the default; choose **Modern design (larger checkbox)** for a 22px checkbox and styled label card.
+- A separate reset button anywhere in page content using `[dsgvo_map_reset]`.
 
 The font-size controls, message, grouped loading and remember-selection feature were introduced in 1.1.0. Version 1.1.2 fixes the layout regression introduced in 1.1.1, restoring the 1.1.0 styling baseline while retaining security and consent checks. The interface follows WordPress's language; English source text and German translations are included. Custom text remains what you enter.
+
+## A reset button outside the map
+
+Add `[dsgvo_map_reset]` in a Shortcode block or page content, for example on your privacy page. Its button is always visible, even without a map or saved choice. Customize the label with `[dsgvo_map_reset text="Reset my map choice"]`. It clears the website's consent cookie, unloads maps on the current page and unchecks all their remember boxes. An accessible status message confirms the reset, with focus remaining on the separate button. Already open maps in other tabs are not unloaded.
+
+Screenshots 6–7 explicitly enable the optional modern checkbox. Screenshot 8 explicitly enables the inline reset using `show_reset="true"`; it is not added by the ordinary map shortcode. Screenshot 9 shows the separate reset shortcode.
 
 ## Consent and privacy
 

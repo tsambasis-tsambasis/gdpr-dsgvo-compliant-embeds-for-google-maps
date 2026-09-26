@@ -79,8 +79,20 @@ function dsgvo_gm_shortcode($atts)
             . esc_html($privacy_link_text) . '</a></div>';
     }
     if ($remember_enabled) {
-        $html .= '<label class="dsgvo-gm-remember-choice ' . esc_attr($class) . '" style="' . esc_attr($remember_style) . '">'
+        $remember_design = 'modern' === dsgvo_gm_meta($id, '_dsgvo_gm_remember_style') ? ' dsgvo-gm-remember-choice--modern' : '';
+        $html .= '<label class="dsgvo-gm-remember-choice ' . esc_attr($class) . $remember_design . '" style="' . esc_attr($remember_style) . '">'
             . '<input type="checkbox" class="dsgvo-gm-remember-checkbox" value="1"> <span>' . esc_html($remember_text) . '</span></label>';
     }
     return $html . '</div></div>';
+}
+
+/** A separate withdrawal control, usable in page text or a privacy-policy page. */
+add_shortcode('dsgvo_map_reset', 'dsgvo_gm_reset_shortcode');
+function dsgvo_gm_reset_shortcode($atts)
+{
+    $default = __('Reset Google Maps choice', 'gdpr-dsgvo-compliant-embeds-for-google-maps');
+    $atts = shortcode_atts(array('text' => $default), $atts, 'dsgvo_map_reset');
+    $text = is_string($atts['text']) && '' !== trim($atts['text']) ? $atts['text'] : $default;
+    return '<div class="dsgvo-gm-reset"><button type="button" class="dsgvo-gm-reset-btn">' . esc_html($text)
+        . '</button><span class="dsgvo-gm-reset-status" role="status"></span></div>';
 }

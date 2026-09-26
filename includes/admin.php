@@ -95,6 +95,10 @@ function dsgvo_gm_map_settings_callback($post)
     $height = dsgvo_gm_meta($post->ID, '_dsgvo_gm_height', '100%');
     $load_all_enabled = dsgvo_gm_meta($post->ID, '_dsgvo_gm_load_all_enabled') ?: 0;
     $remember_enabled = dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_enabled') ?: 0;
+    $remember_style = dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_style', 'classic');
+    if (!in_array($remember_style, array('classic', 'modern'), true)) {
+        $remember_style = 'classic';
+    }
     $remember_text = dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_text') ?: __('Remember selection', 'gdpr-dsgvo-compliant-embeds-for-google-maps');
     $remember_font_size = dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_font_size', '0.85em');
     $remember_color = dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_color') ?: '#666666';
@@ -111,6 +115,13 @@ function dsgvo_gm_map_settings_callback($post)
     <p>
         <strong><?php esc_html_e('Shortcode:', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></strong><br>
         <input type="text" readonly style="width:100%;" value="<?php echo esc_attr("[dsgvo_map id=\"{$post->ID}\"]"); ?>" onclick="this.select();">
+    </p>
+    <p>
+        <strong><?php esc_html_e('Reset consent in page content', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></strong><br>
+        <?php
+        /* translators: %s: the standalone reset shortcode, displayed as code. */
+        printf(esc_html__('Insert %s anywhere in the page content to show a separate reset button. It unloads all maps on the current page and removes the remembered choice for this website.', 'gdpr-dsgvo-compliant-embeds-for-google-maps'), '<code>[dsgvo_map_reset]</code>');
+        ?>
     </p>
 
     <br>
@@ -350,7 +361,16 @@ function dsgvo_gm_map_settings_callback($post)
                 <?php checked($remember_enabled, 1); ?>>
             <?php esc_html_e('Show remember selection', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?>
         </label><br>
-        <span class="description"><?php esc_html_e('Shows a checkbox in the overlay. If checked when loading, a site-wide cookie remembers consent for 180 days for maps with this option enabled. The optional reset control requires show_reset="true" in the shortcode.', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></span>
+        <span class="description"><?php esc_html_e('Shows a checkbox in the overlay. If checked when loading, a site-wide cookie remembers consent for 180 days for maps with this option enabled. Use show_reset="true" for a reset control inside the map, or place [dsgvo_map_reset] separately in the page content.', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></span>
+    </p>
+
+    <p>
+        <label for="dsgvo_gm_remember_style"><?php esc_html_e('Checkbox design', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></label><br>
+        <select id="dsgvo_gm_remember_style" name="dsgvo_gm_remember_style" aria-describedby="dsgvo_gm_remember_style_help">
+            <option value="classic" <?php selected($remember_style, 'classic'); ?>><?php esc_html_e('Existing design', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></option>
+            <option value="modern" <?php selected($remember_style, 'modern'); ?>><?php esc_html_e('Modern design (larger checkbox)', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></option>
+        </select><br>
+        <span id="dsgvo_gm_remember_style_help" class="description"><?php esc_html_e('The modern design is optional. Existing maps keep their current checkbox until you select it here.', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></span>
     </p>
 
     <p>
@@ -452,7 +472,7 @@ function dsgvo_gm_save_meta($post_id)
             dsgvo_gm_save_size($post_id, $field, $value, true);
         }
     }
-    foreach (array('button_shape' => array('rounded', 'square'), 'template' => array('light', 'dark', 'custom')) as $field => $allowed) {
+    foreach (array('button_shape' => array('rounded', 'square'), 'template' => array('light', 'dark', 'custom'), 'remember_style' => array('classic', 'modern')) as $field => $allowed) {
         $value = $input('dsgvo_gm_' . $field);
         if (null !== $value && in_array($value, $allowed, true)) {
             update_post_meta($post_id, '_dsgvo_gm_' . $field, $value);

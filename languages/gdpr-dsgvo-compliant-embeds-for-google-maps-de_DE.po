@@ -3,10 +3,10 @@
 # Distributed under GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: GDPR-DSGVO compliant Embeds for Google Maps 1.1.2\n"
+"Project-Id-Version: GDPR-DSGVO compliant Embeds for Google Maps 1.1.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/gdpr-dsgvo-compliant-embeds-for-google-maps\n"
-"POT-Creation-Date: 2026-09-26 19:23+0000\n"
-"PO-Revision-Date: 2026-09-26 19:23+0000\n"
+"POT-Creation-Date: 2026-09-26 19:57+0000\n"
+"PO-Revision-Date: 2026-09-26 19:57+0000\n"
 "Last-Translator: Tsambasis & Tsambasis\n"
 "Language-Team: Tsambasis & Tsambasis\n"
 "Language: de_DE\n"
@@ -67,6 +67,10 @@ msgstr "Karten entladen und Auswahl zurücksetzen"
 msgid "This map could not be loaded. Please contact the website owner."
 msgstr "Diese Karte konnte nicht geladen werden. Bitte wenden Sie sich an den Website-Betreiber."
 
+#: gdpr-dsgvo-compliant-embeds-for-google-maps.php:289
+msgid "Your choice has been reset. Maps will load only after you consent again."
+msgstr "Ihre Auswahl wurde zurückgesetzt. Karten werden erst nach Ihrer erneuten Zustimmung geladen."
+
 #: includes/admin.php:34
 msgid "Maps"
 msgstr "Karten"
@@ -91,180 +95,206 @@ msgstr "Alle Karten"
 msgid "Map Settings"
 msgstr "Karteneinstellungen"
 
-#: includes/admin.php:98
+#: includes/admin.php:102
 #: includes/frontend.php:50
 msgid "Remember selection"
 msgstr "Auswahl merken"
 
-#: includes/admin.php:112
+#: includes/admin.php:116
 msgid "Shortcode:"
 msgstr "Shortcode:"
 
-#: includes/admin.php:121
+#: includes/admin.php:120
+msgid "Reset consent in page content"
+msgstr "Einwilligung im Seiteninhalt zurücksetzen"
+
+#. translators: %s: the standalone reset shortcode, displayed as code.
+#: includes/admin.php:123
+#, php-format
+msgid "Insert %s anywhere in the page content to show a separate reset button. It unloads all maps on the current page and removes the remembered choice for this website."
+msgstr "Fügen Sie %s an einer beliebigen Stelle im Seiteninhalt ein, um einen separaten Zurücksetzen-Button anzuzeigen. Er entlädt alle Karten auf der aktuellen Seite und entfernt die gespeicherte Auswahl für diese Website."
+
+#: includes/admin.php:132
 msgid "iframe Code:"
 msgstr "iframe-Code:"
 
-#: includes/admin.php:123
+#: includes/admin.php:134
 msgid "Paste a Google Maps embed iframe with an HTTPS source URL. Other iframe sources are not supported."
 msgstr "Fügen Sie den Einbettungs-iframe von Google Maps mit einer HTTPS-Quelladresse ein. Andere iframe-Quellen werden nicht unterstützt."
 
-#: includes/admin.php:127
+#: includes/admin.php:138
 msgid "Button Settings"
 msgstr "Button-Einstellungen"
 
-#: includes/admin.php:130
+#: includes/admin.php:141
 msgid "Button Text:"
 msgstr "Buttontext:"
 
-#: includes/admin.php:139
+#: includes/admin.php:150
 msgid "Button Font Size:"
 msgstr "Button-Schriftgröße:"
 
-#: includes/admin.php:150
+#: includes/admin.php:161
 msgid "Button Type:"
 msgstr "Button-Typ:"
 
-#: includes/admin.php:157
+#: includes/admin.php:168
 msgid "Rounded"
 msgstr "Abgerundet"
 
-#: includes/admin.php:165
+#: includes/admin.php:176
 msgid "Squared"
 msgstr "Eckig"
 
-#: includes/admin.php:169
+#: includes/admin.php:180
 msgid "Style Settings"
 msgstr "Stileinstellungen"
 
-#: includes/admin.php:172
+#: includes/admin.php:183
 msgid "Design:"
 msgstr "Design:"
 
-#: includes/admin.php:174
+#: includes/admin.php:185
 msgid "Light"
 msgstr "Hell"
 
-#: includes/admin.php:175
+#: includes/admin.php:186
 msgid "Dark"
 msgstr "Dunkel"
 
-#: includes/admin.php:176
+#: includes/admin.php:187
 msgid "Custom"
 msgstr "Angepasst"
 
-#: includes/admin.php:182
+#: includes/admin.php:193
 msgid "Overlay Background Color:"
 msgstr "Hintergrundfarbe der Überlagerung:"
 
-#: includes/admin.php:192
+#: includes/admin.php:203
 msgid "Button Background Color:"
 msgstr "Hintergrundfarbe Button:"
 
-#: includes/admin.php:202
+#: includes/admin.php:213
 msgid "Button Text Color:"
 msgstr "Textfarbe Button:"
 
-#: includes/admin.php:212
+#: includes/admin.php:223
 msgid "Privacy Info Text Color:"
 msgstr "Textfarbe Datenschutzinformationen:"
 
-#: includes/admin.php:222
+#: includes/admin.php:233
 msgid "Size Settings (% or px)"
 msgstr "Größeneinstellungen (% oder px)"
 
-#: includes/admin.php:225
+#: includes/admin.php:236
 msgid "Width:"
 msgstr "Breite:"
 
-#: includes/admin.php:232
+#: includes/admin.php:243
 msgid "100% or 600px"
 msgstr "100% oder 600px"
 
-#: includes/admin.php:235
+#: includes/admin.php:246
 msgid "Height:"
 msgstr "Höhe:"
 
-#: includes/admin.php:242
+#: includes/admin.php:253
 msgid "100% or 450px"
 msgstr "100% oder 450px"
 
-#: includes/admin.php:245
+#: includes/admin.php:256
 msgid "Privacy Settings"
 msgstr "Datenschutzeinstellungen"
 
-#: includes/admin.php:254
+#: includes/admin.php:265
 msgid "Enable privacy notice"
 msgstr "Datenschutzhinweis aktivieren"
 
-#: includes/admin.php:259
+#: includes/admin.php:270
 msgid "Privacy Policy Text:"
 msgstr "Text für den Datenschutzhinweis:"
 
-#: includes/admin.php:269
+#: includes/admin.php:280
 msgid "Privacy Text Font Size:"
 msgstr "Schriftgröße des Datenschutztexts:"
 
-#: includes/admin.php:280
+#: includes/admin.php:291
 msgid "Privacy Policy URL Text:"
 msgstr "Linktext zur Datenschutzerklärung:"
 
-#: includes/admin.php:290
+#: includes/admin.php:301
 msgid "Privacy Link Font Size:"
 msgstr "Schriftgröße des Datenschutzlinks:"
 
-#: includes/admin.php:301
+#: includes/admin.php:312
 msgid "Privacy Policy URL:"
 msgstr "URL der Datenschutzerklärung:"
 
-#: includes/admin.php:311
+#: includes/admin.php:322
 msgid "Overlay Message:"
 msgstr "Nachricht im Overlay:"
 
-#: includes/admin.php:316
+#: includes/admin.php:327
 msgid "Optional text shown between the button and the privacy notice."
 msgstr "Optionaler Text, der zwischen Button und Datenschutzhinweis angezeigt wird."
 
-#: includes/admin.php:320
+#: includes/admin.php:331
 msgid "Message Font Size:"
 msgstr "Schriftgröße der Nachricht:"
 
-#: includes/admin.php:330
+#: includes/admin.php:341
 msgid "Load Behavior"
 msgstr "Ladeverhalten"
 
-#: includes/admin.php:339
+#: includes/admin.php:350
 msgid "Load all maps on one page"
 msgstr "Alle teilnehmenden Karten auf einer Seite laden"
 
-#: includes/admin.php:341
+#: includes/admin.php:352
 msgid "If this option is enabled for multiple maps on the same page, one click loads all enabled maps together."
 msgstr "Wenn diese Option bei mehreren Karten auf derselben Seite aktiviert ist, lädt ein Klick alle aktivierten Karten gemeinsam."
 
-#: includes/admin.php:351
+#: includes/admin.php:362
 msgid "Show remember selection"
 msgstr "Checkbox „Auswahl merken“ anzeigen"
 
-#: includes/admin.php:353
-msgid "Shows a checkbox in the overlay. If checked when loading, a site-wide cookie remembers consent for 180 days for maps with this option enabled. The optional reset control requires show_reset=\"true\" in the shortcode."
-msgstr "Zeigt ein Kontrollkästchen in der Überlagerung. Wenn es beim Laden aktiviert ist, merkt sich ein websiteweites Cookie die Einwilligung für 180 Tage für Karten, bei denen diese Option aktiviert ist. Die optionale Schaltfläche zum Zurücksetzen erfordert show_reset=\"true\" im Shortcode."
+#: includes/admin.php:364
+msgid "Shows a checkbox in the overlay. If checked when loading, a site-wide cookie remembers consent for 180 days for maps with this option enabled. Use show_reset=\"true\" for a reset control inside the map, or place [dsgvo_map_reset] separately in the page content."
+msgstr "Zeigt eine Checkbox in der Überlagerung. Wenn sie beim Laden aktiviert ist, merkt sich ein websiteweites Cookie die Einwilligung für 180 Tage für Karten mit aktivierter Merkoption. Verwenden Sie show_reset=\"true\" für einen Zurücksetzen-Button innerhalb der Karte oder platzieren Sie [dsgvo_map_reset] separat im Seiteninhalt."
 
-#: includes/admin.php:357
+#: includes/admin.php:368
+msgid "Checkbox design"
+msgstr "Checkbox-Design"
+
+#: includes/admin.php:370
+msgid "Existing design"
+msgstr "Bisheriges Design"
+
+#: includes/admin.php:371
+msgid "Modern design (larger checkbox)"
+msgstr "Modernes Design (größere Checkbox)"
+
+#: includes/admin.php:373
+msgid "The modern design is optional. Existing maps keep their current checkbox until you select it here."
+msgstr "Das moderne Design ist optional. Bestehende Karten behalten ihre bisherige Checkbox, bis Sie es hier auswählen."
+
+#: includes/admin.php:377
 msgid "Remember Selection Text:"
 msgstr "Text für „Auswahl merken“:"
 
-#: includes/admin.php:367
+#: includes/admin.php:387
 msgid "Remember Selection Font Size:"
 msgstr "Schriftgröße von „Auswahl merken“:"
 
-#: includes/admin.php:378
+#: includes/admin.php:398
 msgid "Remember Selection Text Color:"
 msgstr "Textfarbe von „Auswahl merken“:"
 
-#: includes/admin.php:492
+#: includes/admin.php:512
 msgid "One or more size values were not saved because they contain unsupported CSS. The previous values have been kept."
 msgstr "Eine oder mehrere Größenangaben wurden nicht gespeichert, weil sie nicht unterstütztes CSS enthalten. Die bisherigen Werte bleiben erhalten."
 
-#: includes/admin.php:497
+#: includes/admin.php:517
 msgid "The iframe was not saved because it is not a supported HTTPS Google Maps embed. The previous embed has been kept."
 msgstr "Der iframe wurde nicht gespeichert, weil er keine unterstützte HTTPS-Einbettung von Google Maps ist. Die bisherige Einbettung bleibt erhalten."
 
@@ -279,3 +309,7 @@ msgstr "Es gilt unsere"
 #: includes/frontend.php:48
 msgid "Privacy Policy"
 msgstr "Datenschutzerklärung"
+
+#: includes/frontend.php:93
+msgid "Reset Google Maps choice"
+msgstr "Google-Maps-Auswahl zurücksetzen"

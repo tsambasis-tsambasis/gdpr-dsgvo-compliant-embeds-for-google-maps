@@ -4,7 +4,7 @@
  * Plugin Name:     GDPR-DSGVO compliant Embeds for Google Maps
  * Plugin URI:      https://solutionfirst.m00dy.org/wp-plugin/
  * Description:     Embeds Google Maps after consent, with per-map styles, notices and optional remembered choices.
- * Version:         1.1.1
+ * Version:         1.1.2
  * Requires at least: 6.2
  * Requires PHP:    7.4
  * Author:          Tsambasis & Tsambasis
@@ -45,7 +45,7 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'dsgvo_gm_plugin_
 // Constants
 define('DSGVO_GM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('DSGVO_GM_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('DSGVO_GM_VERSION', '1.1.1');
+define('DSGVO_GM_VERSION', '1.1.2');
 
 // Direct ZIP installations need a registered local path before the first gettext call.
 add_action('init', 'dsgvo_gm_register_translations', 0);
@@ -57,42 +57,148 @@ function dsgvo_gm_register_translations()
     }
 }
 
+/** Preserve the font-size syntax accepted before 1.1.1, including zero and large sizes. */
 function dsgvo_gm_sanitize_font_size($font_size, $default = '')
 {
     if (!is_scalar($font_size)) {
         return $default;
     }
     $font_size = trim((string) $font_size);
-
-    if ($font_size === '') {
-        return $default;
-    }
-
-    if (strlen($font_size) <= 16 && preg_match('/^(\d+(?:\.\d+)?)(px|em|rem|%)$/i', $font_size, $matches)) {
-        $number = (float) $matches[1];
-        $unit = strtolower($matches[2]);
-        $maximum = '%' === $unit ? 1000 : ('px' === $unit ? 200 : 20);
-        if ($number > 0 && $number <= $maximum) {
-            return $matches[1] . $unit;
-        }
-    }
-
-    return $default;
+    return preg_match('/^\d+(\.\d+)?(px|em|rem|%)$/iD', $font_size) ? $font_size : $default;
 }
 
-/** Accept a bounded positive width/height, retaining numeric pixel inputs. */
+/** A deliberately small CSS math grammar: lengths, numbers and four sizing functions. */
+final class DSGVO_GM_CSS_Size
+{
+    private $tokens;
+    private $position = 0;
+
+    public static function valid($value)
+    {
+        // No declarations, strings, escapes, comments, custom properties or network functions.
+        if (strlen($value) > 512 || !preg_match('/^(?:calc|min|max|clamp)\(/i', $value)) {
+            return false;
+        }
+        preg_match_all('/(?:\d*\.\d+|\d+)(?:px|rem|em|dvw|dvh|svw|svh|lvw|lvh|vmin|vmax|vw|vh|rlh|lh|ch|ex|cm|mm|in|pt|pc|%)?|calc|min|max|clamp|[()+*\/,\-]|\s+/i', $value, $matches);
+        if (implode('', $matches[0]) !== $value || count($matches[0]) > 128) {
+            return false;
+        }
+        $previous = null;
+        foreach ($matches[0] as $index => $token) {
+            if (in_array($token, array('+', '-'), true)) {
+                $binary = null !== $previous && (')' === $previous || preg_match('/^[0-9.]/', $previous));
+                if ($binary && (!isset($matches[0][$index - 1], $matches[0][$index + 1]) || '' !== trim($matches[0][$index - 1]) || '' !== trim($matches[0][$index + 1]))) { return false; }
+                if (!$binary && (!isset($matches[0][$index + 1]) || '' === trim($matches[0][$index + 1]))) { return false; }
+            }
+            if ('' !== trim($token)) { $previous = $token; }
+        }
+        $parser = new self();
+        $parser->tokens = array_values(array_filter($matches[0], static function ($token) { return '' !== trim($token); }));
+        $result = $parser->atom(0);
+        return null !== $result && $parser->position === count($parser->tokens) && ('length' === $result[0] || 0.0 === $result[1]);
+    }
+
+    private function current()
+    {
+        return isset($this->tokens[$this->position]) ? $this->tokens[$this->position] : null;
+    }
+
+    private function sum($depth)
+    {
+        $left = $this->product($depth);
+        while (null !== $left && in_array($this->current(), array('+', '-'), true)) {
+            $operator = $this->tokens[$this->position++];
+            $right = $this->product($depth);
+            if (null === $right || $left[0] !== $right[0]) {
+                return null;
+            }
+            if ('number' === $left[0]) {
+                $left[1] = '+' === $operator ? $left[1] + $right[1] : $left[1] - $right[1];
+                if (!is_finite($left[1])) { return null; }
+            }
+        }
+        return $left;
+    }
+
+    private function product($depth)
+    {
+        $left = $this->atom($depth);
+        while (null !== $left && in_array($this->current(), array('*', '/'), true)) {
+            $operator = $this->tokens[$this->position++];
+            $right = $this->atom($depth);
+            if (null === $right || ('/' === $operator && ('number' !== $right[0] || 0.0 === $right[1])) || ('*' === $operator && 'length' === $left[0] && 'length' === $right[0])) {
+                return null;
+            }
+            if ('number' === $left[0] && 'number' === $right[0]) {
+                $left[1] = '*' === $operator ? $left[1] * $right[1] : $left[1] / $right[1];
+                if (!is_finite($left[1])) { return null; }
+            } else {
+                $left = array('length', null);
+            }
+        }
+        return $left;
+    }
+
+    private function atom($depth)
+    {
+        if ($depth > 12) { return null; }
+        $token = $this->current();
+        $sign = 1;
+        if (in_array($token, array('+', '-'), true)) {
+            $sign = '-' === $token ? -1 : 1;
+            ++$this->position;
+            $token = $this->current();
+            if (!is_string($token) || !preg_match('/^[0-9.]/', $token)) { return null; }
+        }
+        if (null === $token) { return null; }
+        if (preg_match('/^((?:\d*\.\d+|\d+))(px|rem|em|dvw|dvh|svw|svh|lvw|lvh|vmin|vmax|vw|vh|rlh|lh|ch|ex|cm|mm|in|pt|pc|%)?$/iD', $token, $parts)) {
+            ++$this->position;
+            $number = (float) $parts[1] * $sign;
+            return is_finite($number) ? array(isset($parts[2]) ? 'length' : 'number', isset($parts[2]) ? null : $number) : null;
+        }
+        if ('(' === $token) {
+            ++$this->position;
+            $value = $this->sum($depth + 1);
+            if (')' !== $this->current()) { return null; }
+            ++$this->position;
+            return $value;
+        }
+        $function = strtolower($token);
+        if (!in_array($function, array('calc', 'min', 'max', 'clamp'), true)) { return null; }
+        ++$this->position;
+        if ('(' !== $this->current()) { return null; }
+        ++$this->position;
+        $arguments = array();
+        do {
+            if (count($arguments) >= 16) { return null; }
+            $argument = $this->sum($depth + 1);
+            if (null === $argument || ($arguments && $arguments[0][0] !== $argument[0])) { return null; }
+            $arguments[] = $argument;
+            if (',' !== $this->current()) { break; }
+            ++$this->position;
+        } while (true);
+        if (')' !== $this->current() || ('calc' === $function && 1 !== count($arguments)) || ('clamp' === $function && 3 !== count($arguments))) { return null; }
+        ++$this->position;
+        if ('length' === $arguments[0][0] || 'calc' === $function) { return $arguments[0]; }
+        $values = array_column($arguments, 1);
+        $number = 'min' === $function ? min($values) : ('max' === $function ? max($values) : max($values[0], min($values[1], $values[2])));
+        return array('number', $number);
+    }
+}
+
+/** Allow safe sizing values while keeping numeric legacy inputs as pixels. */
 function dsgvo_gm_sanitize_dimension($value, $default = '100%')
 {
-    if (!is_scalar($value)) {
-        return $default;
-    }
+    if (!is_scalar($value)) { return $default; }
     $value = trim((string) $value);
-    if (strlen($value) <= 16 && preg_match('/^(\d+(?:\.\d+)?)(px|%)?$/i', $value, $matches)) {
-        $unit = isset($matches[2]) && '' !== $matches[2] ? strtolower($matches[2]) : 'px';
-        $number = (float) $matches[1];
-        if ($number > 0 && $number <= ('%' === $unit ? 1000 : 10000)) {
-            return $matches[1] . $unit;
-        }
+    // An optional final declaration terminator was harmless in the previous inline style.
+    $value = rtrim($value, "; \t\n\r\0\x0B");
+    if (strlen($value) > 512) { return $default; }
+    if (preg_match('/^(?:\d*\.\d+|\d+)(?:px|rem|em|dvw|dvh|svw|svh|lvw|lvh|vmin|vmax|vw|vh|rlh|lh|ch|ex|cm|mm|in|pt|pc|%)?$/iD', $value)) {
+        return preg_match('/[a-z%]$/i', $value) ? $value : $value . 'px';
+    }
+    if (in_array(strtolower($value), array('auto', 'inherit', 'initial', 'unset', 'min-content', 'max-content', 'fit-content'), true) || DSGVO_GM_CSS_Size::valid($value)) {
+        return $value;
     }
     return $default;
 }

@@ -1,55 +1,116 @@
 === GDPR-DSGVO compliant Embeds for Google Maps ===
 Contributors: solutionfirst
 Donate link: https://www.paypal.com/donate/?hosted_button_id=CUPZTPGSAHNKY
-Tags: google maps, dsgvo, gdpr, iframe, map, privacy, datenschutz, datenschutzgrundverordnung, google
-Requires at least: 4.9
-Tested up to: 7.0
-Stable tag: 1.1.0
+Tags: google maps, gdpr, dsgvo, privacy, shortcode
+Requires at least: 6.2
+Tested up to: 7.1
+Stable tag: 1.1.1
 Requires PHP: 7.4
-License: GPLv2
+License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Enables GDPR-DSGVO compliant embedding of multiple Google Maps iframes with user consent. Select light, dark or custom designs, add an optional privacy-policy notice, with unlimited maps.
+Show Google Maps after consent, with custom styles, text sizes, optional remembered consent and grouped loading for multiple maps.
 
 == Description ==
-A flexible WordPress plugin that lets you create fully GDPR-DSGVO compliant Google Maps embeds with per-map customization right in the settings.
-Visit our live demonstration at [Live Plugin Demo - Solution First](https://plugin-demo.m00dy.org/live-demonstration/ "Live Plugin Demo")
 
-* GDPR-DSGVO compliant: Your Google Maps iframe embedding only loads after consenting via button click. Hence there are no requests made to Google's server beforehand.
-* Iframe Input: Paste your Google Maps iframe code and see the shortcode for easy insertion.
-* Consent Button: Define your own button text (e.g. Load Google Maps), choose rounded or square styling, and pick background and text colors.
-* Design Modes: Select a light or dark overlay or go “custom” to set your own overlay background, button colors and privacy-text colors via the WordPress color picker.
-* Size Control: Specify map width and height in % or px (e.g. 100% or 600px).
-* Privacy Notice: Toggle a GDPR-DSGVO notice, enter custom info text and link text, and point it to your privacy-policy URL.
-* Unlimited Maps: Free tier by default lets you add unlimited embeds. Have fun!
-* Full Translation: Decide whether you want to use this plugin with English translation or German translation.
-* No Advertising: Enjoy an advertising-free environment hence this Plugin does not display any advertising.
+Create Google Maps embeds that display a local consent overlay before loading the map. Add as many maps as you need, customize each one in WordPress, and insert it with a shortcode.
 
-**Manual Installation**
-1. Upload the entire `gdpr-dsgvo-compliant-google-maps-embeds` folder to the `/wp-content/plugins/` directory.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Go to **Maps → Add New** to create your first DSGVO-compliant map.
+Published by [Tsambasis & Tsambasis](https://tsambasis.net/).
+[Live Plugin Demo — Tsambasis & Tsambasis](https://plugin-demo.m00dy.org/live-demonstration/).
 
-**Support and Feedback**
-If you need assistance or have any suggestions, please don’t hesitate to get in touch <wordpress-support@m00dy.org>. We’re happy to help and value your feedback!
-Please also check out our corresponding GDPR-DSVGO YouTube Plugin for safe video embedding. 
+* Unlimited maps without a license key or paid tier.
+* Separate iframe input and shortcode for each map.
+* Light, dark and custom designs, with configurable overlay and button colors.
+* Custom button text and rounded or square buttons.
+* Separate font sizes for the button, overlay message, privacy text, privacy link and remember-selection label.
+* An optional message between the load button and privacy notice.
+* Configurable privacy notice, link text and privacy-policy URL.
+* Map width and height controls; percentage height acts as an aspect ratio relative to the container width. Loaded maps use at least 200 x 200 pixels plus space for the reset control; resetting restores the configured size.
+* Optional grouped loading: one click loads the maps on that page that also have the group option enabled.
+* An optional, initially unchecked remember-selection checkbox below the privacy notice.
+* English source text and a German translation, following the WordPress language.
+* No plugin advertising or developer tracking.
 
-**Disclaimer and Imprint**
-This plugin only blocks unwanted requests to Google’s servers made through the configured Google Maps iframe until the user explicitly clicks the consent button in the frontend.
-This plugin does not protect your website from any other unwanted (server) requests.
-We do not offer legal advice — if you’re in doubt, please consult a qualified attorney.
-Please find our Imprint here [Solution First Imprint](https://solutionfirst.m00dy.org/impressum.html "Solution First Imprint")
+= Fonts, messages and multiple maps =
+
+Version 1.1.0 introduced the five font-size controls, optional overlay message, grouped loading and remembered consent. Font sizes accept supported CSS units such as px, em, rem and %. Choose readable sizes and enough map height for the message, privacy link and checkbox, especially on mobile devices.
+
+The load-all setting is configured per map. Clicking a participating map loads the other participating maps on the same page; maps outside the group remain separate. Explain this scope in the button or overlay text before asking visitors to load the group.
+
+= Consent and the optional cookie =
+
+Without a remembered choice, the Google Maps iframe is created only after the visitor selects the load button. Selecting the optional remember checkbox before loading sets the first-party cookie `dsgvo_gm_consent=1` for up to 180 days, with path `/`, SameSite=Lax and Secure on HTTPS. This is a site-wide choice for maps with the remember option enabled: those maps can load on later visits without another click. Maps without that option still require explicit loading. Browser settings can block or remove the cookie.
+
+The checkbox is optional and initially unchecked. Decide whether to offer remembered consent and describe its effect in your privacy notice. The cookie is a loading preference, not a server-side consent audit log.
+
+Each loaded map provides **Unload maps and reset choice**. This deletes the plugin's consent cookie, unloads all currently loaded plugin maps on that page and restores their overlays with unchecked boxes. It cannot undo information already transmitted to Google.
+
+= External service: Google Maps =
+
+Once a map is loaded, the visitor's browser connects directly to Google. Supported HTTPS embed URLs use `google.com`, `www.google.com`, `maps.google.com`, `google.de`, `www.google.de` or `maps.google.de`; the embed can load additional Google resources. Google receives connection information such as the IP address and browser/device information, and may process cookies or Google-account information. The iframe's `strict-origin-when-cross-origin` referrer policy sends the website origin to Google, without the page path or query.
+
+* [Google Privacy Policy](https://policies.google.com/privacy)
+* [Google Maps Additional Terms](https://www.google.com/help/terms_maps/)
+
+The plugin's local overlay does not itself load the configured Google iframe before consent or remembered consent. It does not block Google requests made by your theme, other plugins, manually embedded maps or other services. After loading, Google controls the map content and related data processing.
+
+The plugin supports consent-based loading; its name is not a guarantee that your website complies with GDPR/DSGVO or other law. You remain responsible for notices, valid consent, withdrawal options and your site's complete data flows. This is independent software, not an official Google product or legal advice.
+
+= Support and more information =
+
+Contact the publisher through [Tsambasis & Tsambasis](https://tsambasis.net/).
+The existing [plugin information page — Tsambasis & Tsambasis](https://solutionfirst.m00dy.org/wp-plugin/) and [live demonstration](https://plugin-demo.m00dy.org/live-demonstration/) remain available at their established URLs.
+
+== Installation ==
+
+1. Install and activate the plugin ZIP through Plugins > Add New > Upload Plugin. For manual installation, use the `gdpr-dsgvo-compliant-embeds-for-google-maps` folder inside `wp-content/plugins/`.
+2. Open Maps > Add New Map, give the map a title and paste its Google Maps iframe code.
+3. Configure appearance, text sizes, privacy notice and loading options, then publish the map.
+4. Copy its shortcode into a Shortcode block, for example `[dsgvo_map id="123"]`.
+5. Test the public page on desktop and mobile, both before and after consent, and update your privacy notice.
+
+JavaScript is required to load the map after consent. Maps are managed in WordPress; this plugin does not require a Google Maps API key for the supported share/embed iframe.
+
+== Frequently Asked Questions ==
+
+= Where do I find the iframe code? =
+
+Open the location in Google Maps, choose Share and then Embed a map, and copy the iframe HTML. Paste the entire iframe into the map's settings. A normal location/share link is not the same as embed code.
+
+= How do I add a map to a page? =
+
+Insert `[dsgvo_map id="123"]`, replacing 123 with the map ID shown in its editor. You can use multiple map shortcodes on one page.
+
+= Does one click always load every map? =
+
+No. Grouped loading applies to maps with the load-all option enabled on the same page. A remembered choice can affect later loading as explained in the consent section.
+
+= Can I change the language? =
+
+The interface follows WordPress. German translations are included; the source language is English. Custom button text, messages and notices remain the text you entered.
+
+= Is there a map limit or paid license? =
+
+No. The plugin supports unlimited maps without a license key. Hosting and third-party services remain subject to their own terms.
 
 == Screenshots ==
-1. **Frontend** example showing the button and privacy link.
-2. **Add/Edit map** screen with custom style settings, custom size settings, and custom privacy-option.
-3. **Add/Edit map** screen with iframe input, custom button text, custom style settings and custom size settings.
-4. **Frontend** example showing the button and privacy link with different style settings.
-5. **Frontend** example showing the final Google Map after click on the consent button.
-6. **Main admin screen** showing the list of maps.
-7. **Add/Edit map** screen with no input.
+1. Map list in WordPress.
+2. Iframe input, button text, font size and button shape.
+3. Custom design colors and map dimensions.
+4. Privacy text, link typography and optional overlay message.
+5. Grouped loading and remember-selection text, size and color.
+6. Mobile consent overlay before Google Maps is loaded.
+7. Light, dark and custom desktop overlays with message and remember-selection controls.
+8. A loaded Google map with the control to unload maps and reset the choice.
 
 == Changelog ==
+= 1.1.1 =
+* Updated publisher details and documentation for Tsambasis & Tsambasis.
+* Improved validation, permission checks and consent handling.
+* Remembered consent now loads only maps that offer remembering; added an unload/reset control.
+* Refreshed German translations and documentation of the 1.1.0 controls.
+* Requires WordPress 6.2 or later.
+
 = 1.1.0 =
 * Added per-map font size fields for button text, overlay message, privacy text, privacy link, and remember-selection text.
 * Moved the remember-selection checkbox below the privacy notice/link in the frontend overlay.
@@ -69,7 +130,6 @@ Please find our Imprint here [Solution First Imprint](https://solutionfirst.m00d
 
 = 1.0.2 =
 * Removed the map limit and license option. Now every user can add unlimited maps without any license key.
-* Removed call to load_plugin_textdomain() hence it's not needed anymore (only necessary for WordPress Versions < 4.6).
 * Code Refactoring (code structure, code comments).
 * Adjusted the screenshots (removed some, added new) due to no longer having a license option.
 
@@ -79,18 +139,4 @@ Please find our Imprint here [Solution First Imprint](https://solutionfirst.m00d
 * Bug Fix JavaScript Integration of sandbox flags for iframe embedding: Allowed Pop-ups and Top-Level-Navigation to prevent COOP-Errors while opening "large map" by clicking a link inside the rendered iframe.
 
 = 1.0.0 =
-* Initial release: basic GDPR-DSGVO-compliant Google Maps iframe embed with limit of 3 maps with the free license and unlimited maps with the professional license
-
-== Frequently Asked Questions ==
-= How do I add a map to a page? =
-Place the shortcode `[dsgvo_map id="123"]` - where 123 is the map ID - directly inside your content.
-
-= Where do I find the iframe code? =
-Visit Google Maps via website on your PC or laptop and search for your desired location to open the location listing. Click on the **share icon** inside your location listing and go to the embedding tab to copy the full HTML starting with `<iframe src=`.
-
-= Is this plugin free to use or do I need a license? =
-Yes, this plugin is free to use and you can add unlimited maps.
-
-= Where can I find more information? =
-Visit us at [GDPR-DSGVO compliant Embeds for Google Maps - Solution First](https://solutionfirst.m00dy.org/wp-plugin/ "GDPR-DSGVO compliant Embeds for Google Maps - Solution First").
-
+* Initial release with consent-based iframe embeds.

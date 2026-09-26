@@ -11,12 +11,16 @@ if (! defined('ABSPATH')) exit; // Exit if accessed directly
 
 
 add_action('admin_enqueue_scripts', function () {
+    $screen = get_current_screen();
+    if (!$screen || 'dsgvo_map' !== $screen->post_type) {
+        return;
+    }
     wp_enqueue_style('wp-color-picker');
     wp_enqueue_script(
         'dsgvo-gm-color-picker',
         DSGVO_GM_PLUGIN_URL . 'assets/js/dsgvo-gm-color-picker.js',
         ['wp-color-picker', 'jquery'],
-        DSGVO_GM_VERSION, 
+        DSGVO_GM_VERSION,
         true
     );
 });
@@ -34,6 +38,11 @@ function dsgvo_gm_register_post_type()
             'all_items'          => __('All Maps', 'gdpr-dsgvo-compliant-embeds-for-google-maps'),
         ),
         'public'        => false,
+        'publicly_queryable' => false,
+        'show_in_rest'  => false,
+        'query_var'     => false,
+        'rewrite'       => false,
+        'exclude_from_search' => true,
         'show_ui'       => true,
         'show_in_menu'  => true,
         'supports'      => array('title'),
@@ -59,36 +68,36 @@ function dsgvo_gm_map_settings_callback($post)
     wp_nonce_field('dsgvo_gm_save', 'dsgvo_gm_nonce');
 
     // Retrieve existing values or defaults
-    $iframe     = get_post_meta($post->ID, '_dsgvo_gm_iframe', true);
-    $template   = get_post_meta($post->ID, '_dsgvo_gm_template',  true) ?: 'light';
-    $btn_text   = get_post_meta($post->ID, '_dsgvo_gm_button_text', true) ?: __('Load Google Maps', 'gdpr-dsgvo-compliant-embeds-for-google-maps');
-    $btn_shape = get_post_meta($post->ID, '_dsgvo_gm_button_shape', true);
+    $iframe     = dsgvo_gm_meta($post->ID, '_dsgvo_gm_iframe');
+    $template   = dsgvo_gm_meta($post->ID, '_dsgvo_gm_template') ?: 'light';
+    $btn_text   = dsgvo_gm_meta($post->ID, '_dsgvo_gm_button_text') ?: __('Load Google Maps', 'gdpr-dsgvo-compliant-embeds-for-google-maps');
+    $btn_shape = dsgvo_gm_meta($post->ID, '_dsgvo_gm_button_shape');
     if (! in_array($btn_shape, ['rounded', 'square'], true)) {
         $btn_shape = 'rounded'; // Default
     }
 
-    $overlay_bg = get_post_meta($post->ID, '_dsgvo_gm_overlay_bg',  true) ?: '#ffffff';
-    $button_bg  = get_post_meta($post->ID, '_dsgvo_gm_button_bg',   true) ?: '#0073aa';
-    $btn_color  = get_post_meta($post->ID, '_dsgvo_gm_button_color',   true) ?: '#ffffff';
-    $btn_font_size = dsgvo_gm_sanitize_font_size(get_post_meta($post->ID, '_dsgvo_gm_button_font_size', true), '16px');
-    $privacy_color = get_post_meta($post->ID, '_dsgvo_gm_privacy_color', true) ?: '#666666';
-    $privacy_enabled = get_post_meta($post->ID, '_dsgvo_gm_privacy_enabled', true) ?: 0;
-    $privacy_link = get_post_meta($post->ID, '_dsgvo_gm_privacy_link', true) ?: '';
+    $overlay_bg = dsgvo_gm_meta($post->ID, '_dsgvo_gm_overlay_bg') ?: '#ffffff';
+    $button_bg  = dsgvo_gm_meta($post->ID, '_dsgvo_gm_button_bg') ?: '#0073aa';
+    $btn_color  = dsgvo_gm_meta($post->ID, '_dsgvo_gm_button_color') ?: '#ffffff';
+    $btn_font_size = dsgvo_gm_sanitize_font_size(dsgvo_gm_meta($post->ID, '_dsgvo_gm_button_font_size'), '16px');
+    $privacy_color = dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_color') ?: '#666666';
+    $privacy_enabled = dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_enabled') ?: 0;
+    $privacy_link = dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_link') ?: '';
 
-    $privacy_text = get_post_meta($post->ID, '_dsgvo_gm_privacy_text', true) ?: '';
-    $privacy_link_text = get_post_meta($post->ID, '_dsgvo_gm_privacy_link_text', true) ?: '';
-    $privacy_font_size = dsgvo_gm_sanitize_font_size(get_post_meta($post->ID, '_dsgvo_gm_privacy_font_size', true), '0.8em');
-    $privacy_link_font_size = dsgvo_gm_sanitize_font_size(get_post_meta($post->ID, '_dsgvo_gm_privacy_link_font_size', true), '0.8em');
-    $message_text = get_post_meta($post->ID, '_dsgvo_gm_message_text', true) ?: '';
-    $message_font_size = dsgvo_gm_sanitize_font_size(get_post_meta($post->ID, '_dsgvo_gm_message_font_size', true), '0.9em');
+    $privacy_text = dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_text') ?: '';
+    $privacy_link_text = dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_link_text') ?: '';
+    $privacy_font_size = dsgvo_gm_sanitize_font_size(dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_font_size'), '0.8em');
+    $privacy_link_font_size = dsgvo_gm_sanitize_font_size(dsgvo_gm_meta($post->ID, '_dsgvo_gm_privacy_link_font_size'), '0.8em');
+    $message_text = dsgvo_gm_meta($post->ID, '_dsgvo_gm_message_text') ?: '';
+    $message_font_size = dsgvo_gm_sanitize_font_size(dsgvo_gm_meta($post->ID, '_dsgvo_gm_message_font_size'), '0.9em');
 
-    $width = get_post_meta($post->ID, '_dsgvo_gm_width', true) ?: '100%';
-    $height = get_post_meta($post->ID, '_dsgvo_gm_height', true) ?: '100%';
-    $load_all_enabled = get_post_meta($post->ID, '_dsgvo_gm_load_all_enabled', true) ?: 0;
-    $remember_enabled = get_post_meta($post->ID, '_dsgvo_gm_remember_enabled', true) ?: 0;
-    $remember_text = get_post_meta($post->ID, '_dsgvo_gm_remember_text', true) ?: __('Remember selection', 'gdpr-dsgvo-compliant-embeds-for-google-maps');
-    $remember_font_size = dsgvo_gm_sanitize_font_size(get_post_meta($post->ID, '_dsgvo_gm_remember_font_size', true), '0.85em');
-    $remember_color = get_post_meta($post->ID, '_dsgvo_gm_remember_color', true) ?: '#666666';
+    $width = dsgvo_gm_sanitize_dimension(dsgvo_gm_meta($post->ID, '_dsgvo_gm_width'));
+    $height = dsgvo_gm_sanitize_dimension(dsgvo_gm_meta($post->ID, '_dsgvo_gm_height'));
+    $load_all_enabled = dsgvo_gm_meta($post->ID, '_dsgvo_gm_load_all_enabled') ?: 0;
+    $remember_enabled = dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_enabled') ?: 0;
+    $remember_text = dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_text') ?: __('Remember selection', 'gdpr-dsgvo-compliant-embeds-for-google-maps');
+    $remember_font_size = dsgvo_gm_sanitize_font_size(dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_font_size'), '0.85em');
+    $remember_color = dsgvo_gm_meta($post->ID, '_dsgvo_gm_remember_color') ?: '#666666';
 
 
     // Set default if empty
@@ -110,7 +119,8 @@ function dsgvo_gm_map_settings_callback($post)
 
     <p>
         <label for="dsgvo_gm_iframe"><?php esc_html_e('iframe Code:', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></label><br>
-        <textarea id="dsgvo_gm_iframe" name="dsgvo_gm_iframe" style="width:100%;height:100px;"><?php printf('%s', esc_textarea($iframe)); ?></textarea>
+        <textarea id="dsgvo_gm_iframe" name="dsgvo_gm_iframe" style="width:100%;height:100px;" aria-describedby="dsgvo-gm-iframe-help"><?php printf('%s', esc_textarea($iframe)); ?></textarea>
+        <span id="dsgvo-gm-iframe-help" class="description"><?php esc_html_e('Paste a Google Maps embed iframe with an HTTPS source URL. Other iframe sources are not supported.', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></span>
 
     </p>
 
@@ -340,7 +350,7 @@ function dsgvo_gm_map_settings_callback($post)
                 <?php checked($remember_enabled, 1); ?>>
             <?php esc_html_e('Show remember selection', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?>
         </label><br>
-        <span class="description"><?php esc_html_e('Shows a checkbox in the overlay. If it is checked when loading, a cookie stores consent for future page views.', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></span>
+        <span class="description"><?php esc_html_e('Shows a checkbox in the overlay. If checked when loading, a site-wide cookie remembers consent for 180 days for maps with this option enabled. Visitors can unload maps and reset the choice.', 'gdpr-dsgvo-compliant-embeds-for-google-maps'); ?></span>
     </p>
 
     <p>
@@ -377,148 +387,85 @@ function dsgvo_gm_map_settings_callback($post)
     <?php
 }
 
-// Save meta box data
-add_action('save_post', 'dsgvo_gm_save_meta');
+// Save only this post type and only authorized, intentional editor submissions.
+add_action('save_post_dsgvo_map', 'dsgvo_gm_save_meta');
 function dsgvo_gm_save_meta($post_id)
 {
-    if (! isset($_POST['dsgvo_gm_nonce']) || ! wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['dsgvo_gm_nonce'])), 'dsgvo_gm_save')) {
+    if (!isset($_POST['dsgvo_gm_nonce']) || !is_string($_POST['dsgvo_gm_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['dsgvo_gm_nonce'])), 'dsgvo_gm_save')) {
         return;
     }
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+    if ((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || wp_is_post_revision($post_id) || 'dsgvo_map' !== get_post_type($post_id) || !current_user_can('edit_post', $post_id)) {
         return;
     }
-    if (get_post_type($post_id) !== 'dsgvo_map') {
-        return;
-    }
-
-    // Iframe
-    if (isset($_POST['dsgvo_gm_iframe'])) {
-        $iframe = wp_kses(wp_unslash($_POST['dsgvo_gm_iframe']), [
-            'iframe' => [
-                'src'            => [],
-                'width'          => [],
-                'height'         => [],
-                'style'          => [],
-                'allowfullscreen' => [],
-                'loading'        => [],
-                'referrerpolicy' => [],
-            ]
-        ]);
-        update_post_meta($post_id, '_dsgvo_gm_iframe', $iframe);
-    }
-
-    // Button Text
-    $btn_text = isset($_POST['dsgvo_gm_button_text'])
-        ? sanitize_text_field(wp_unslash($_POST['dsgvo_gm_button_text']))
-        : '';
-    update_post_meta($post_id, '_dsgvo_gm_button_text', $btn_text);
-
-    if (isset($_POST['dsgvo_gm_button_font_size'])) {
-        update_post_meta($post_id, '_dsgvo_gm_button_font_size', dsgvo_gm_sanitize_font_size(wp_unslash($_POST['dsgvo_gm_button_font_size']), '16px'));
-    }
-
-    // Button Shape
-    if (isset($_POST['dsgvo_gm_button_shape'])) {
-        $btn_shape = sanitize_text_field(wp_unslash($_POST['dsgvo_gm_button_shape']));
-        // only permitted values (rounded & square)
-        if (in_array($btn_shape, ['rounded', 'square'], true)) {
-            update_post_meta($post_id, '_dsgvo_gm_button_shape', $btn_shape);
+    // Missing or non-scalar fields are ignored instead of erasing existing values.
+    $input = static function ($key) {
+        // The enclosing handler verified the nonce and edit capability; each returned value is sanitized for its specific field below.
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        return isset($_POST[$key]) && is_string($_POST[$key]) ? wp_unslash($_POST[$key]) : null;
+    };
+    $iframe_input = $input('dsgvo_gm_iframe');
+    if (null !== $iframe_input) {
+        $iframe = dsgvo_gm_sanitize_iframe($iframe_input);
+        if ('' === trim($iframe_input) || '' !== $iframe) {
+            update_post_meta($post_id, '_dsgvo_gm_iframe', wp_slash($iframe));
+        } else {
+            set_transient('dsgvo_gm_iframe_error_' . get_current_user_id(), 1, MINUTE_IN_SECONDS);
         }
     }
-
-    // Template (light|dark|custom)
-    $tmpl = isset($_POST['dsgvo_gm_template']) && in_array($_POST['dsgvo_gm_template'], ['light', 'dark', 'custom'], true)
-        ? sanitize_text_field(wp_unslash($_POST['dsgvo_gm_template']))
-        : 'light';
-    update_post_meta($post_id, '_dsgvo_gm_template', $tmpl);
-
-
-    // Custom‑Colors if template custom
-    $custom_fields = [
-        'dsgvo_gm_overlay_bg'  => '_dsgvo_gm_overlay_bg',
-        'dsgvo_gm_button_bg'   => '_dsgvo_gm_button_bg',
-        'dsgvo_gm_button_color' => '_dsgvo_gm_button_color',
-        'dsgvo_gm_privacy_color' => '_dsgvo_gm_privacy_color',
-    ];
-
-    if ($tmpl === 'custom') {
-        foreach ($custom_fields as $field_name => $meta_key) {
-            if (isset($_POST[$field_name])) {
-                $color = sanitize_hex_color(wp_unslash($_POST[$field_name]));
-                update_post_meta($post_id, $meta_key, $color);
+    $text_fields = array('button_text', 'privacy_text', 'privacy_link_text', 'remember_text');
+    foreach ($text_fields as $field) {
+        $value = $input('dsgvo_gm_' . $field);
+        if (null !== $value) {
+            update_post_meta($post_id, '_dsgvo_gm_' . $field, sanitize_text_field(substr($value, 0, 2000)));
+        }
+    }
+    $message = $input('dsgvo_gm_message_text');
+    if (null !== $message) {
+        update_post_meta($post_id, '_dsgvo_gm_message_text', sanitize_textarea_field(substr($message, 0, 8000)));
+    }
+    foreach (array('button_font_size' => '16px', 'privacy_font_size' => '0.8em', 'privacy_link_font_size' => '0.8em', 'message_font_size' => '0.9em', 'remember_font_size' => '0.85em') as $field => $default) {
+        $value = $input('dsgvo_gm_' . $field);
+        if (null !== $value) {
+            update_post_meta($post_id, '_dsgvo_gm_' . $field, dsgvo_gm_sanitize_font_size($value, $default));
+        }
+    }
+    foreach (array('button_shape' => array('rounded', 'square'), 'template' => array('light', 'dark', 'custom')) as $field => $allowed) {
+        $value = $input('dsgvo_gm_' . $field);
+        if (null !== $value && in_array($value, $allowed, true)) {
+            update_post_meta($post_id, '_dsgvo_gm_' . $field, $value);
+        }
+    }
+    foreach (array('overlay_bg', 'button_bg', 'button_color', 'privacy_color', 'remember_color') as $field) {
+        $value = $input('dsgvo_gm_' . $field);
+        if (null !== $value) {
+            $color = sanitize_hex_color($value);
+            if ($color) {
+                update_post_meta($post_id, '_dsgvo_gm_' . $field, $color);
+            } elseif ('' === $value) {
+                delete_post_meta($post_id, '_dsgvo_gm_' . $field);
             }
         }
-    } else {
-        // if light/dark remove custom‑Metas
-        foreach ($custom_fields as $meta_key) {
-            delete_post_meta($post_id, $meta_key);
+    }
+    foreach (array('width', 'height') as $field) {
+        $value = $input('dsgvo_gm_' . $field);
+        if (null !== $value) {
+            update_post_meta($post_id, '_dsgvo_gm_' . $field, dsgvo_gm_sanitize_dimension($value));
         }
     }
-
-    // Size: width & height
-    if (isset($_POST['dsgvo_gm_width'])) {
-        update_post_meta($post_id, '_dsgvo_gm_width', sanitize_text_field(wp_unslash($_POST['dsgvo_gm_width'])));
+    foreach (array('privacy_enabled', 'load_all_enabled', 'remember_enabled') as $field) {
+        update_post_meta($post_id, '_dsgvo_gm_' . $field, '1' === $input('dsgvo_gm_' . $field) ? 1 : 0);
     }
-    if (isset($_POST['dsgvo_gm_height'])) {
-        update_post_meta($post_id, '_dsgvo_gm_height', sanitize_text_field(wp_unslash($_POST['dsgvo_gm_height'])));
-    }
-
-    // Privacy-Fields
-    $enabled = isset($_POST['dsgvo_gm_privacy_enabled']) ? 1 : 0;
-    update_post_meta($post_id, '_dsgvo_gm_privacy_enabled', $enabled);
-    if (isset($_POST['dsgvo_gm_privacy_link'])) {
-        update_post_meta(
-            $post_id,
-            '_dsgvo_gm_privacy_link',
-            esc_url_raw(wp_unslash($_POST['dsgvo_gm_privacy_link']))
-        );
-    }
-
-    if (isset($_POST['dsgvo_gm_privacy_text'])) {
-        update_post_meta($post_id, '_dsgvo_gm_privacy_text', sanitize_text_field(wp_unslash($_POST['dsgvo_gm_privacy_text'])));
-    }
-
-    if (isset($_POST['dsgvo_gm_privacy_font_size'])) {
-        update_post_meta($post_id, '_dsgvo_gm_privacy_font_size', dsgvo_gm_sanitize_font_size(wp_unslash($_POST['dsgvo_gm_privacy_font_size']), '0.8em'));
-    }
-
-    if (isset($_POST['dsgvo_gm_privacy_link_text'])) {
-        update_post_meta($post_id, '_dsgvo_gm_privacy_link_text', sanitize_text_field(wp_unslash($_POST['dsgvo_gm_privacy_link_text'])));
-    }
-
-    if (isset($_POST['dsgvo_gm_privacy_link_font_size'])) {
-        update_post_meta($post_id, '_dsgvo_gm_privacy_link_font_size', dsgvo_gm_sanitize_font_size(wp_unslash($_POST['dsgvo_gm_privacy_link_font_size']), '0.8em'));
-    }
-
-    if (isset($_POST['dsgvo_gm_message_text'])) {
-        update_post_meta($post_id, '_dsgvo_gm_message_text', sanitize_textarea_field(wp_unslash($_POST['dsgvo_gm_message_text'])));
-    }
-
-    if (isset($_POST['dsgvo_gm_message_font_size'])) {
-        update_post_meta($post_id, '_dsgvo_gm_message_font_size', dsgvo_gm_sanitize_font_size(wp_unslash($_POST['dsgvo_gm_message_font_size']), '0.9em'));
-    }
-
-    // Load behavior
-    $load_all_enabled = isset($_POST['dsgvo_gm_load_all_enabled']) ? 1 : 0;
-    update_post_meta($post_id, '_dsgvo_gm_load_all_enabled', $load_all_enabled);
-
-    $remember_enabled = isset($_POST['dsgvo_gm_remember_enabled']) ? 1 : 0;
-    update_post_meta($post_id, '_dsgvo_gm_remember_enabled', $remember_enabled);
-
-    if (isset($_POST['dsgvo_gm_remember_text'])) {
-        update_post_meta($post_id, '_dsgvo_gm_remember_text', sanitize_text_field(wp_unslash($_POST['dsgvo_gm_remember_text'])));
-    }
-
-    if (isset($_POST['dsgvo_gm_remember_font_size'])) {
-        update_post_meta($post_id, '_dsgvo_gm_remember_font_size', dsgvo_gm_sanitize_font_size(wp_unslash($_POST['dsgvo_gm_remember_font_size']), '0.85em'));
-    }
-
-    if (isset($_POST['dsgvo_gm_remember_color'])) {
-        $remember_color = sanitize_hex_color(wp_unslash($_POST['dsgvo_gm_remember_color']));
-        if ($remember_color) {
-            update_post_meta($post_id, '_dsgvo_gm_remember_color', $remember_color);
-        } else {
-            delete_post_meta($post_id, '_dsgvo_gm_remember_color');
-        }
+    $privacy_link = $input('dsgvo_gm_privacy_link');
+    if (null !== $privacy_link) {
+        update_post_meta($post_id, '_dsgvo_gm_privacy_link', esc_url_raw($privacy_link, array('https', 'http')));
     }
 }
+
+add_action('admin_notices', function () {
+    $screen = get_current_screen();
+    $key = 'dsgvo_gm_iframe_error_' . get_current_user_id();
+    if ($screen && 'dsgvo_map' === $screen->post_type && get_transient($key)) {
+        delete_transient($key);
+        echo '<div class="notice notice-error"><p>' . esc_html__('The iframe was not saved because it is not a supported HTTPS Google Maps embed. The previous embed has been kept.', 'gdpr-dsgvo-compliant-embeds-for-google-maps') . '</p></div>';
+    }
+});

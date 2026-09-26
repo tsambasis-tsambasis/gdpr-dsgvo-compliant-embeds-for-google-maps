@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 add_shortcode('dsgvo_map', 'dsgvo_gm_shortcode');
 function dsgvo_gm_shortcode($atts)
 {
-    $atts = shortcode_atts(array('id' => '', 'class' => ''), $atts, 'dsgvo_map');
+    $atts = shortcode_atts(array('id' => '', 'class' => '', 'show_reset' => 'false'), $atts, 'dsgvo_map');
     if (!is_scalar($atts['id']) || !preg_match('/^[1-9][0-9]*$/D', (string) $atts['id'])) {
         return '';
     }
@@ -28,12 +28,14 @@ function dsgvo_gm_shortcode($atts)
         return '';
     }
     $btn_text = dsgvo_gm_meta($id, '_dsgvo_gm_button_text', __('Load Map', 'gdpr-dsgvo-compliant-embeds-for-google-maps'));
-    $btn_shape = dsgvo_gm_meta($id, '_dsgvo_gm_button_shape', 'rounded');
-    $template = dsgvo_gm_meta($id, '_dsgvo_gm_template', 'light');
-    $template = in_array($template, array('light', 'dark', 'custom'), true) ? $template : 'light';
-    $color = static function ($key, $default) use ($id) {
+    $btn_shape = dsgvo_gm_meta($id, '_dsgvo_gm_button_shape');
+    $template = dsgvo_gm_meta($id, '_dsgvo_gm_template');
+    $custom_colors = 'custom' === $template;
+    $template = in_array($template, array('light', 'dark'), true) ? $template : 'custom';
+    $color = static function ($key, $property) use ($id, $custom_colors) {
         $value = sanitize_hex_color(dsgvo_gm_meta($id, '_dsgvo_gm_' . $key));
-        return $value ? $value : $default;
+        // Empty legacy colors inherit the original stylesheet, including its opacity.
+        return $custom_colors && $value ? $property . ':' . $value . ';' : '';
     };
     $font = static function ($key, $default) use ($id) {
         return dsgvo_gm_sanitize_font_size(dsgvo_gm_meta($id, '_dsgvo_gm_' . $key), $default);
@@ -51,24 +53,21 @@ function dsgvo_gm_shortcode($atts)
     $style_attr = 'width:' . $width . ';position:relative;overflow:hidden;';
     $style_attr .= '%' === substr($height, -1) ? 'height:0;padding-bottom:' . $height . ';' : 'height:' . $height . ';';
     $class = 'dsgvo-gm-' . $template;
-    $extra_classes = array();
-    if (is_string($atts['class'])) {
-        foreach (preg_split('/\s+/', trim($atts['class'])) as $extra) {
-            $extra_classes[] = sanitize_html_class($extra);
-        }
-    }
-    $overlay_style = 'custom' === $template ? 'background-color:' . $color('overlay_bg', '#ffffff') . ';' : '';
-    $btn_style = 'custom' === $template ? 'background-color:' . $color('button_bg', '#0073aa') . ';color:' . $color('button_color', '#ffffff') . ';' : '';
-    $btn_style .= 'font-size:' . $font('button_font_size', '16px') . ';border-radius:' . ('square' === $btn_shape ? '0' : '15px') . ';';
-    $privacy_style = 'custom' === $template ? 'color:' . $color('privacy_color', '#666666') . ';' : '';
+    // Older releases accepted but never applied "class". Keep that behavior:
+    // activating previously ignored theme classes can override saved dimensions.
+    $show_reset = is_scalar($atts['show_reset']) && in_array(strtolower((string) $atts['show_reset']), array('true', '1'), true);
+    $overlay_style = $color('overlay_bg', 'background-color');
+    $btn_style = $color('button_bg', 'background-color') . $color('button_color', 'color');
+    $btn_style .= 'font-size:' . $font('button_font_size', '16px') . ';border-radius:' . ('rounded' === $btn_shape ? '15px' : '0') . ';';
+    $privacy_style = $color('privacy_color', 'color');
     $privacy_text_style = $privacy_style . 'font-size:' . $font('privacy_font_size', '0.8em') . ';';
     $privacy_link_style = $privacy_style . 'font-size:' . $font('privacy_link_font_size', '0.8em') . ';';
     $message_style = $privacy_style . 'font-size:' . $font('message_font_size', '0.9em') . ';';
     $remember_color = sanitize_hex_color(dsgvo_gm_meta($id, '_dsgvo_gm_remember_color'));
     $remember_style = ($remember_color ? 'color:' . $remember_color . ';' : $privacy_style) . 'font-size:' . $font('remember_font_size', '0.85em') . ';';
     $b64 = base64_encode($iframe);
-    $html = '<div class="dsgvo-gm-container ' . esc_attr(trim($class . ' ' . implode(' ', $extra_classes))) . '" style="' . esc_attr($style_attr) . '">';
-    $html .= '<div class="dsgvo-gm-overlay ' . esc_attr($class) . '" style="' . esc_attr($overlay_style) . '" data-iframe="' . esc_attr($b64) . '" data-load-all="' . esc_attr((string) $load_all_enabled) . '" data-remember-enabled="' . esc_attr((string) $remember_enabled) . '" data-map-id="' . esc_attr((string) $id) . '">';
+    $html = '<div class="dsgvo-gm-container ' . esc_attr($class) . '" style="' . esc_attr($style_attr) . '">';
+    $html .= '<div class="dsgvo-gm-overlay ' . esc_attr($class) . '" style="' . esc_attr($overlay_style) . '" data-iframe="' . esc_attr($b64) . '" data-load-all="' . esc_attr((string) $load_all_enabled) . '" data-remember-enabled="' . esc_attr((string) $remember_enabled) . '" data-show-reset="' . ($show_reset ? '1' : '0') . '" data-map-id="' . esc_attr((string) $id) . '">';
     $html .= '<button type="button" class="dsgvo-gm-load-btn ' . esc_attr($class) . '" style="' . esc_attr($btn_style) . '">' . esc_html($btn_text) . '</button>';
     if ('' !== $message_text) {
         $html .= '<div class="dsgvo-gm-message ' . esc_attr($class) . '" style="' . esc_attr($message_style) . '">' . esc_html($message_text) . '</div>';

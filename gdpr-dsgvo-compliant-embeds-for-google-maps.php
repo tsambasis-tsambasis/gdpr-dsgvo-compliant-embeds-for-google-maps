@@ -4,7 +4,7 @@
  * Plugin Name:     GDPR-DSGVO compliant Embeds for Google Maps
  * Plugin URI:      https://solutionfirst.m00dy.org/wp-plugin/
  * Description:     Embeds Google Maps after consent, with per-map styles, notices and optional remembered choices.
- * Version:         1.1.2
+ * Version:         1.1.3
  * Requires at least: 6.2
  * Requires PHP:    7.4
  * Author:          Tsambasis & Tsambasis
@@ -45,7 +45,7 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'dsgvo_gm_plugin_
 // Constants
 define('DSGVO_GM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('DSGVO_GM_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('DSGVO_GM_VERSION', '1.1.2');
+define('DSGVO_GM_VERSION', '1.1.3');
 
 // Direct ZIP installations need a registered local path before the first gettext call.
 add_action('init', 'dsgvo_gm_register_translations', 0);
@@ -286,6 +286,7 @@ function dsgvo_gm_enqueue_assets()
         'revokeText' => __('Unload maps and reset choice', 'gdpr-dsgvo-compliant-embeds-for-google-maps'),
         'errorText' => __('This map could not be loaded. Please contact the website owner.', 'gdpr-dsgvo-compliant-embeds-for-google-maps'),
         'frameTitle' => __('Google Maps', 'gdpr-dsgvo-compliant-embeds-for-google-maps'),
+        'resetText' => __('Your choice has been reset. Maps will load only after you consent again.', 'gdpr-dsgvo-compliant-embeds-for-google-maps'),
     ));
 }
 
